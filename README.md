@@ -67,6 +67,10 @@ Resets the timer to initial specified duration.
 | --- | --- | --- |
 | [shouldStop] | <code>Boolean</code> | If set to true, the timer will be forced to stop; otherwise will reset and continue running. |
 
+## Test
+
+    npm run test
+
 ## License
 
 [The MIT License (MIT)](https://georapbox.mit-license.org/@2018)
