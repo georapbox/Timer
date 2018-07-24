@@ -1,3 +1,8 @@
+[![Build Status](https://travis-ci.org/georapbox/Timer.svg?branch=master)](https://travis-ci.org/georapbox/Timer)
+[![dependencies Status](https://david-dm.org/georapbox/Timer/status.svg)](https://david-dm.org/georapbox/Timer)
+[![devDependencies Status](https://david-dm.org/georapbox/Timer/dev-status.svg)](https://david-dm.org/georapbox/Timer?type=dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://georapbox.mit-license.org/@2018)
+
 # Timer
 
 Minimal javascript library to create and manage timers
