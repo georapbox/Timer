@@ -1,9 +1,10 @@
 import Timer from '../src/index';
+import chai from 'chai';
 
-const assert = require('assert');
+const { assert } = chai;
 
-let timer,
-  result = 0;
+let timer;
+let result = 0;
 
 beforeEach(async () => {
   window.requestAnimationFrame = callback => {
@@ -18,7 +19,7 @@ describe('Timer Tests', () => {
     assert.ok(timer);
   });
 
-  it('starts the timer withour reset', async () => {
+  it('starts the timer without reset', async () => {
     await timer.start();
     assert.ok(timer._started);
   });
