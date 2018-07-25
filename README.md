@@ -1,3 +1,4 @@
+[![npm version](https://img.shields.io/npm/v/@georapbox/timer.svg)](https://www.npmjs.com/package/@georapbox/timer)
 [![Build Status](https://travis-ci.org/georapbox/Timer.svg?branch=master)](https://travis-ci.org/georapbox/Timer)
 [![dependencies Status](https://david-dm.org/georapbox/Timer/status.svg)](https://david-dm.org/georapbox/Timer)
 [![devDependencies Status](https://david-dm.org/georapbox/Timer/dev-status.svg)](https://david-dm.org/georapbox/Timer?type=dev)
@@ -8,6 +9,12 @@
 Minimal javascript library to create and manage timers
 
 **NOTE:** Depends on `window.requestAnimationFrame`. If your environment does not support it, you can [polyfill](https://github.com/darius/requestAnimationFrame).
+
+## Install
+
+```sh
+$ npm install @georapbox/timer --save
+```
 
 ## API
 
@@ -77,7 +84,9 @@ Resets the timer to initial specified duration.
 
 ## Test
 
-`npm run test`
+```sh
+$ npm run test
+```
 
 ## License
 

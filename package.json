@@ -25,7 +25,11 @@
     "type": "git",
     "url": "git+https://github.com/georapbox/Timer.git"
   },
-  "keywords": [],
+  "keywords": [
+    "Timer",
+    "timers",
+    "javascript"
+  ],
   "author": "George Raptis <georapbox@gmail.com>",
   "license": "MIT",
   "bugs": {
