@@ -1,6 +1,6 @@
 {
   "name": "@georapbox/timer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Minimal javascript library to create and manage timers",
   "main": "dist/Timer.js",
   "files": [

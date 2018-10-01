@@ -89,6 +89,17 @@ class Timer {
     this._time = 0;
     return this;
   }
+
+  /**
+   * Check (at any time) if the timer is running or not.
+   *
+   * @memberof Timer
+   * @this {Timer}
+   * @returns {Boolean} True if the timer is running; otherwise false.
+   */
+  isRunning() {
+    return this._started;
+  }
 }
 
 export default Timer;

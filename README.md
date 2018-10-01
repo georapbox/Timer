@@ -24,6 +24,7 @@ $ npm install @georapbox/timer --save
   * [.start([shouldReset])](#Timer+start) ⇒ <code>[Timer](#Timer)</code>
   * [.stop()](#Timer+stop) ⇒ <code>[Timer](#Timer)</code>
   * [.reset([shouldStop])](#Timer+reset) ⇒ <code>[Timer](#Timer)</code>
+  * [.isRunning()](#Timer+isRunning) ⇒ <code>[Timer](#Timer)</code>
 
 <a name="new_Timer_new"></a>
 
@@ -81,6 +82,15 @@ Resets the timer to initial specified duration.
 | Param | Type | Description |
 | --- | --- | --- |
 | [shouldStop] | <code>Boolean</code> | If set to `true`, the timer will be forced to stop; otherwise will reset and continue running. |
+
+<a name="Timer+isRunning"></a>
+
+### timer.isRunning() ⇒ <code>Boolean</code>
+
+Check (at any time) if the timer is running or not.
+
+**Kind**: instance method of <code>[Timer](#Timer)</code>  
+**Returns**: <code>Boolean</code> - True if the timer is running; otherwise false.  
 
 ## Test
 
