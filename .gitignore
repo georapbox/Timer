@@ -64,7 +64,3 @@ lib
 # misc
 .DS_Store
 demo/
-
-# lock files
-package-lock.json
-yarn.lock
