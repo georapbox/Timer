@@ -24,7 +24,7 @@ $ npm install @georapbox/timer --save
   * [.start([shouldReset])](#Timer+start) ⇒ <code>[Timer](#Timer)</code>
   * [.stop()](#Timer+stop) ⇒ <code>[Timer](#Timer)</code>
   * [.reset([shouldStop])](#Timer+reset) ⇒ <code>[Timer](#Timer)</code>
-  * [.isRunning()](#Timer+isRunning) ⇒ <code>[Timer](#Timer)</code>
+  * [.isRunning()](#Timer+isRunning) ⇒ <code>Boolean</code>
 
 <a name="new_Timer_new"></a>
 
