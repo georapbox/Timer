@@ -1,68 +1,91 @@
 import Timer from '../src/index';
 import chai from 'chai';
+import { JSDOM } from 'jsdom';
 
 const { assert } = chai;
 
-let timer;
-let result = 0;
+let timer, elapsed, remaining;
+const onTimerRunning = instance => ({ elapsed, remaining } = instance.time());
 
-beforeEach(async () => {
-  window.requestAnimationFrame = callback => {
-    setTimeout(callback, 0);
-  };
+window = new JSDOM(``, { pretendToBeVisual: true }).window;
 
-  timer = new Timer(1000, () => {});
+beforeEach(() => {
+  elapsed = remaining = 0;
+  timer && timer.stop();
+  timer = new Timer(1000, onTimerRunning);
 });
 
-describe('Timer Tests', () => {
+describe('Timer', () => {
   it('initializes a timer', () => {
-    assert.ok(timer);
+    assert.instanceOf(timer, Timer, 'timer is  an intance of Timer');
   });
 
-  it('starts the timer without reset', async () => {
-    await timer.start();
-    assert.ok(timer._started);
+  it('starts the timer without reset', () => {
+    timer.start();
+    assert.isTrue(timer._started);
   });
 
-  it('starts the timer and then resets', async () => {
-    await timer.start(true);
-    assert.ok(timer._started);
+  it('starts the timer and then resets', done => {
+    timer.start(true);
+    assert.isTrue(timer._started);
 
     setTimeout(() => {
-      assert.ok(!timer._started);
-    }, 1100);
+      assert.isFalse(timer._started);
+      done();
+    }, 1200);
   });
 
-  it('stops the timer', async () => {
-    await timer.start();
-    assert.ok(timer._started);
+  it('stops the timer', () => {
+    timer.start();
+    assert.isTrue(timer._started);
 
     timer.stop();
-    assert.ok(!timer._started);
+    assert.isFalse(timer._started);
   });
 
-  it('resets the timer without stop', async () => {
-    await timer.start();
-    assert.ok(timer._started);
+  it('resets the timer without stop', () => {
+    timer.start();
+    assert.isTrue(timer._started);
 
     timer.reset();
-    assert.ok(timer._started);
+    assert.isTrue(timer._started);
   });
 
-  it('resets the timer and then stops', async () => {
-    await timer.start();
-    assert.ok(timer._started);
+  it('resets the timer and then stops', () => {
+    timer.start();
+    assert.isTrue(timer._started);
 
     timer.reset(true);
-    assert.ok(!timer._started);
+    assert.isFalse(timer._started);
   });
 
-  it('executes the callback function', async () => {
-    await timer.start();
-    assert.ok(timer._started);
+  it('executes the callback function', done => {
+    timer.start();
+    assert.isTrue(timer._started);
 
     setTimeout(() => {
-      assert.equal(result, 1);
-    }, 1100);
+      assert.isAbove(elapsed, 0);
+      done();
+    }, 1200);
+  });
+
+  it('gets the remaining and elapsed time', done => {
+    timer.start();
+
+    setTimeout(() => {
+      assert.isAbove(elapsed, 0);
+      assert.isBelow(remaining, 1000);
+      done();
+    }, 500);
+  });
+
+  it('check if timer is running', done => {
+    timer.start();
+    assert.isTrue(timer.isRunning());
+
+    setTimeout(() => {
+      assert.isFalse(timer.isRunning());
+      done();
+    }, 1200);
   });
 });
