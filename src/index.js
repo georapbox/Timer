@@ -1,5 +1,16 @@
-import tick from './tick';
-import now from './now';
+function now() {
+  return window.performance ? window.performance.now() : Date.now ? Date.now() : new Date().getTime();
+}
+
+function tick(instance) {
+  if (instance._started === false) {
+    return;
+  }
+
+  instance._time = instance._time + now() - instance._now;
+  instance.stop().start();
+  instance._callback && instance._callback(instance);
+}
 
 class Timer {
   /**
