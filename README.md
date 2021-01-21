@@ -1,7 +1,8 @@
 [![npm version](https://img.shields.io/npm/v/@georapbox/timer.svg)](https://www.npmjs.com/package/@georapbox/timer)
 [![Build Status](https://travis-ci.com/georapbox/Timer.svg?branch=master)](https://travis-ci.com/georapbox/Timer)
-[![dependencies Status](https://david-dm.org/georapbox/Timer/status.svg)](https://david-dm.org/georapbox/Timer)
-[![devDependencies Status](https://david-dm.org/georapbox/Timer/dev-status.svg)](https://david-dm.org/georapbox/Timer?type=dev)
+[![Coverage Status](https://coveralls.io/repos/github/georapbox/Timer/badge.svg?branch=master)](https://coveralls.io/github/georapbox/Timer?branch=master)
+[![dependencies Status](https://status.david-dm.org/gh/georapbox/Timer.svg)](https://david-dm.org/georapbox/Timer)
+[![devDependencies Status](https://status.david-dm.org/gh/georapbox/Timer.svg?type=dev)](https://david-dm.org/georapbox/Timer?type=dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://georapbox.mit-license.org/@2018)
 
 # Timer
@@ -14,6 +15,28 @@ Minimal javascript library to create and manage timers
 
 ```sh
 $ npm install @georapbox/timer --save
+```
+
+## Usage
+
+The library is exported in UMD, CommonJS, and ESM formats. You can import it the following ways:
+
+### Using ESM import statement
+
+```js
+import Timer from '@georapbox/timer';
+```
+
+### Using CommonJS require statement
+
+```js
+const Timer = require('@georapbox/timer').default;
+```
+
+### As old school browser global
+
+```html
+<script src="https://unpkg.com/@georapbox/timer"></script>
 ```
 
 ## API
@@ -34,7 +57,7 @@ Creates a Timer instance.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [duration] | <code>Number</code> | The timer's duration (ms). If left `undefined` or `0` the timer counts up instead of down. |
+| [duration] | <code>Number</code> | The timer's duration (ms). If left `undefined` or `0` or negative number the timer counts up instead of down. |
 | [callback] | <code>function</code> | Function to be executed while timer is running. The `Timer` instance is passed by as parameter. |
 
 <a name="Timer+time"></a>

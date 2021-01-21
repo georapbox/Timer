@@ -1,91 +1,105 @@
 import Timer from '../src/index';
-import chai from 'chai';
-import { JSDOM } from 'jsdom';
-
-const { assert } = chai;
 
 let timer, elapsed, remaining;
 const onTimerRunning = instance => ({ elapsed, remaining } = instance.time());
 
-window = new JSDOM(``, { pretendToBeVisual: true }).window;
-
 beforeEach(() => {
   elapsed = remaining = 0;
   timer && timer.stop();
-  timer = new Timer(1000, onTimerRunning);
+  timer = new Timer(200, onTimerRunning);
 });
 
 describe('Timer', () => {
   it('initializes a timer', () => {
-    assert.instanceOf(timer, Timer, 'timer is  an intance of Timer');
+    expect(timer instanceof Timer).toBe(true);
+  });
+
+  it('initializes a timer with no duration or using a negative number', done => {
+    const t1 = new Timer(onTimerRunning);
+    const t2 = new Timer(-1000, onTimerRunning);
+
+    t1.start();
+    t2.start();
+
+    setTimeout(() => {
+      expect(t1.time().remaining).toBe(0);
+      expect(t1.time().elapsed).toBeGreaterThan(0);
+
+      expect(t2.time().remaining).toBe(0);
+      expect(t2.time().elapsed).toBeGreaterThan(0);
+
+      t1.stop();
+      t2.stop();
+      done();
+    }, 200);
   });
 
   it('starts the timer without reset', () => {
     timer.start();
-    assert.isTrue(timer._started);
+    expect(timer._started).toBe(true);
   });
 
   it('starts the timer and then resets', done => {
     timer.start(true);
-    assert.isTrue(timer._started);
+    expect(timer._started).toBe(true);
 
     setTimeout(() => {
-      assert.isFalse(timer._started);
+      expect(timer._started).toBe(false);
       done();
-    }, 1200);
+    }, 500);
   });
 
   it('stops the timer', () => {
     timer.start();
-    assert.isTrue(timer._started);
+    expect(timer._started).toBe(true);
 
     timer.stop();
-    assert.isFalse(timer._started);
+    expect(timer._started).toBe(false);
   });
 
   it('resets the timer without stop', () => {
     timer.start();
-    assert.isTrue(timer._started);
+    expect(timer._started).toBe(true);
 
     timer.reset();
-    assert.isTrue(timer._started);
+    expect(timer._started).toBe(true);
   });
 
   it('resets the timer and then stops', () => {
     timer.start();
-    assert.isTrue(timer._started);
+    expect(timer._started).toBe(true);
 
     timer.reset(true);
-    assert.isFalse(timer._started);
+    expect(timer._started).toBe(false);
   });
 
   it('executes the callback function', done => {
     timer.start();
-    assert.isTrue(timer._started);
+    expect(timer._started).toBe(true);
 
     setTimeout(() => {
-      assert.isAbove(elapsed, 0);
+      expect(elapsed).toBeGreaterThan(0);
       done();
-    }, 1200);
+    }, 500);
   });
 
   it('gets the remaining and elapsed time', done => {
     timer.start();
 
     setTimeout(() => {
-      assert.isAbove(elapsed, 0);
-      assert.isBelow(remaining, 1000);
+      expect(elapsed).toBeGreaterThan(0);
+      expect(remaining).toBeLessThan(1000);
       done();
     }, 500);
   });
 
   it('check if timer is running', done => {
     timer.start();
-    assert.isTrue(timer.isRunning());
+    expect(timer.isRunning()).toBe(true);
 
     setTimeout(() => {
-      assert.isFalse(timer.isRunning());
+      expect(timer.isRunning()).toBe(false);
       done();
-    }, 1200);
+    }, 500);
   });
 });
