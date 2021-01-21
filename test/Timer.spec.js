@@ -1,13 +1,7 @@
 import Timer from '../src/index';
-// import chai from 'chai';
-// import { JSDOM } from 'jsdom';
-
-// const { assert } = chai;
 
 let timer, elapsed, remaining;
 const onTimerRunning = instance => ({ elapsed, remaining } = instance.time());
-
-// window = new JSDOM(``, { pretendToBeVisual: true }).window;
 
 beforeEach(() => {
   elapsed = remaining = 0;
@@ -18,6 +12,26 @@ beforeEach(() => {
 describe('Timer', () => {
   it('initializes a timer', () => {
     expect(timer instanceof Timer).toBe(true);
+  });
+
+  it('initializes a timer with no duration or using a negative number', done => {
+    const t1 = new Timer(onTimerRunning);
+    const t2 = new Timer(-1000, onTimerRunning);
+
+    t1.start();
+    t2.start();
+
+    setTimeout(() => {
+      expect(t1.time().remaining).toBe(0);
+      expect(t1.time().elapsed).toBeGreaterThan(0);
+
+      expect(t2.time().remaining).toBe(0);
+      expect(t2.time().elapsed).toBeGreaterThan(0);
+
+      t1.stop();
+      t2.stop();
+      done();
+    }, 200);
   });
 
   it('starts the timer without reset', () => {

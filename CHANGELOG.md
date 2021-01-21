@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## v1.2.0 - 2021-01-21
+- Count up if user provides a negative number for `duration`.
+- Fix wrong behavior if both `duration` and `callback` not provided.
 - Export library in ESM and ComonJS formats.
 - Replace Mocha with Jest for testing.
 - Replace Webpack with rollup to bundle the library.

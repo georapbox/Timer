@@ -9,7 +9,10 @@ function tick(instance) {
 
   instance._time = instance._time + now() - instance._now;
   instance.stop().start();
-  instance._callback && instance._callback(instance);
+
+  if (typeof instance._callback === 'function') {
+    instance._callback(instance);
+  }
 }
 
 class Timer {
@@ -17,7 +20,7 @@ class Timer {
    * Timer constructor
    *
    * @constructor Timer
-   * @param {Number} [duration] The timer's duration (ms). If left undefined or 0 the timer counts up instead of down.
+   * @param {Number} [duration] The timer's duration (ms). If left `undefined` or `0` or negative number the timer counts up instead of down.
    * @param {Function} [callback] Function to be executed while timer is running. The Timer instance is passed by as parameter.
    */
   constructor(duration, callback) {
@@ -27,7 +30,11 @@ class Timer {
     this._duration = duration;
     this._callback = callback;
 
-    if (typeof duration === 'function') {
+    if (duration < 0) {
+      this._duration = 0;
+    }
+
+    if (!duration || typeof duration === 'function') {
       this._duration = 0;
       this._callback = duration;
     }

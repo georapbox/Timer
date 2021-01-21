@@ -30,7 +30,7 @@ import Timer from '@georapbox/timer';
 ### Using CommonJS require statement
 
 ```js
-const Timer = require('@georapbox/timer');
+const Timer = require('@georapbox/timer').default;
 ```
 
 ### As old school browser global
@@ -57,7 +57,7 @@ Creates a Timer instance.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [duration] | <code>Number</code> | The timer's duration (ms). If left `undefined` or `0` the timer counts up instead of down. |
+| [duration] | <code>Number</code> | The timer's duration (ms). If left `undefined` or `0` or negative number the timer counts up instead of down. |
 | [callback] | <code>function</code> | Function to be executed while timer is running. The `Timer` instance is passed by as parameter. |
 
 <a name="Timer+time"></a>
