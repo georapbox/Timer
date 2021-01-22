@@ -1,8 +1,8 @@
-import babel from 'rollup-plugin-babel';
+import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
-const libraryName = 'Timer';
+const LIBRARY_NAME = 'Timer';
 
 const banner = `/*!
  * ${pkg.name}
@@ -17,78 +17,62 @@ const banner = `/*!
 
 export default commandLineArgs => {
   const configs = [
-    // UMD Development
     {
       input: 'src/index.js',
-      output: {
-        banner,
-        name: libraryName,
-        file: `dist/${libraryName}.umd.js`,
-        format: 'umd'
-      },
-      plugins: [
-        // Uncomment the following 2 lines if your library has external dependencies
-        // resolve(), // teach Rollup how to find external modules
-        // commonjs(), // so Rollup can convert external modules to an ES module
-        babel({
-          exclude: ['node_modules/**']
-        })
-      ]
-    },
-
-    // CommonJS (for Node) and ES module (for bundlers) build
-    {
-      input: 'src/index.js',
-      external: [], // indicate which modules should be treated as external
       output: [
         {
           banner,
-          file: `dist/${libraryName}.cjs.js`,
+          name: LIBRARY_NAME,
+          file: `dist/${LIBRARY_NAME}.umd.js`, // UMD
+          format: 'umd'
+        },
+        {
+          banner,
+          file: `dist/${LIBRARY_NAME}.cjs.js`, // CommonJS
           format: 'cjs',
           exports: 'auto'
         },
         {
           banner,
-          file: `dist/${libraryName}.esm.js`,
+          file: `dist/${LIBRARY_NAME}.esm.js`, // ESM
           format: 'es'
         }
       ],
       plugins: [
         babel({
+          babelHelpers: 'bundled',
           exclude: ['node_modules/**']
         })
       ]
     }
   ];
 
+  // Production
   if (commandLineArgs.environment === 'BUILD:production') {
-    // Production
     configs.push({
       input: 'src/index.js',
       output: [
         {
           banner,
-          name: libraryName,
-          file: `dist/${libraryName}.umd.min.js`,
+          name: LIBRARY_NAME,
+          file: `dist/${LIBRARY_NAME}.umd.min.js`, // UMD
           format: 'umd'
         },
         {
           banner,
-          file: `dist/${libraryName}.cjs.min.js`,
+          file: `dist/${LIBRARY_NAME}.cjs.min.js`, // CommonJS
           format: 'cjs',
           exports: 'auto'
         },
         {
           banner,
-          file: `dist/${libraryName}.esm.min.js`,
+          file: `dist/${LIBRARY_NAME}.esm.min.js`, // ESM
           format: 'es'
         }
       ],
       plugins: [
-        // Uncomment the following 2 lines if your library has external dependencies
-        // resolve(), // teach Rollup how to find external modules
-        // commonjs(), // so Rollup can convert external modules to an ES module
         babel({
+          babelHelpers: 'bundled',
           exclude: ['node_modules/**']
         }),
         terser({
