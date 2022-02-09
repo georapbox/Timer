@@ -1,8 +1,6 @@
 [![npm version](https://img.shields.io/npm/v/@georapbox/timer.svg)](https://www.npmjs.com/package/@georapbox/timer)
 [![Build Status](https://travis-ci.com/georapbox/Timer.svg?branch=master)](https://travis-ci.com/georapbox/Timer)
 [![Coverage Status](https://coveralls.io/repos/github/georapbox/Timer/badge.svg?branch=master)](https://coveralls.io/github/georapbox/Timer?branch=master)
-[![dependencies Status](https://status.david-dm.org/gh/georapbox/Timer.svg)](https://david-dm.org/georapbox/Timer)
-[![devDependencies Status](https://status.david-dm.org/gh/georapbox/Timer.svg?type=dev)](https://david-dm.org/georapbox/Timer?type=dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://georapbox.mit-license.org/@2018)
 
 # Timer
