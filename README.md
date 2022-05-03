@@ -40,7 +40,7 @@ const Timer = require('@georapbox/timer').default;
 ## API
 
 * [Timer](#Timer)
-  * [new Timer([duration], [callback])](#new_Timer_new)
+  * [new Timer(duration, elapsedTime, [callback])](#new_Timer_new)
   * [.time()](#Timer+time) ⇒ <code>Object</code>
   * [.start([shouldReset])](#Timer+start) ⇒ <code>[Timer](#Timer)</code>
   * [.stop()](#Timer+stop) ⇒ <code>[Timer](#Timer)</code>
@@ -49,21 +49,26 @@ const Timer = require('@georapbox/timer').default;
 
 <a name="new_Timer_new"></a>
 
-### new Timer([duration], [callback])
+### new Timer(duration, elapsedTime, [callback])
 
 Creates a Timer instance.
 
+**Throws**:
+
+- <code>TypeError</code> If `duration` is not a number or `NaN`.
+- <code>TypeError</code> If `elapsedTime` is not a number or `NaN`.
+
 | Param | Type | Description |
 | --- | --- | --- |
-| [duration] | <code>Number</code> | The timer's duration (ms). If left `undefined` or `0` or negative number the timer counts up instead of down. |
+| elapsedTime | <code>Number</code> | The time that has elapsed in milliseconds. If negative number provided, it will become `0`. If a number greater than `duration` is provided, it will become equal to `duration`. |
+| duration | <code>Number</code> | The timer's duration in milliseconds. If negative number provided, it will become `0`. |
 | [callback] | <code>function</code> | Function to be executed while timer is running. The `Timer` instance is passed by as parameter. |
 
 <a name="Timer+time"></a>
 
 ### timer.time() ⇒ <code>Object</code>
 
-Get the remaining and elapsed time.  
-If no duration is specified during initialization, the remaining time will always be `0`.
+Get the remaining and elapsed time.
 
 **Kind**: instance method of <code>[Timer](#Timer)</code>  
 **Returns**: <code>Object</code> - An object that contains the remaining and the elapsed time in milliseconds.  

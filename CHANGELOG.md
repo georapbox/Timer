@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v2.0.0 - 2022-05-04
+
+### Breaking changes
+
+- The identity of the constructor has changed from `new Timer([duration], [callback])` to `new Timer(elapsedTime, duration, [callback])` in order to support initialising the Timer with elapsed time. 
+- `elapsedTime` and `duration` parameters are both required and should be numbers other than `NaN`, otherwise it throws `TypeError`.
+- If the `duration` is a negative number, it will become `0`.
+
 ## v1.2.0 - 2021-01-21
 - Count up if user provides a negative number for `duration`.
 - Fix wrong behavior if both `duration` and `callback` not provided.
