@@ -9,13 +9,13 @@ Minimal javascript library to create and manage timers
 
 **NOTE:** Depends on `window.requestAnimationFrame`. If your environment does not support it, you can [polyfill](https://github.com/darius/requestAnimationFrame).
 
-## Install
+[API documentation](#api) &bull; [Demo](https://georapbox.github.io/timer/)
+
+## Installation
 
 ```sh
 $ npm install @georapbox/timer --save
 ```
-
-## Usage
 
 The library is exported in UMD, CommonJS, and ESM formats. You can import it the following ways:
 
@@ -28,97 +28,82 @@ import Timer from '@georapbox/timer';
 ### Using CommonJS require statement
 
 ```js
-const Timer = require('@georapbox/timer').default;
+const Timer = require('@georapbox/timer');
 ```
 
 ### As old school browser global
 
 ```html
-<script src="https://unpkg.com/@georapbox/timer"></script>
+<script src="https://unpkg.com/@georapbox/timer/dist/Timer.umd.min.js"></script>
 ```
 
 ## API
 
+<a name="Timer"></a>
+
 * [Timer](#Timer)
-  * [new Timer([duration], [callback])](#new_Timer_new)
+  * [new Timer(elapsedTime, duration, [callback])](#new_Timer_new)
   * [.time()](#Timer+time) ⇒ <code>Object</code>
-  * [.start([shouldReset])](#Timer+start) ⇒ <code>[Timer](#Timer)</code>
-  * [.stop()](#Timer+stop) ⇒ <code>[Timer](#Timer)</code>
-  * [.reset([shouldStop])](#Timer+reset) ⇒ <code>[Timer](#Timer)</code>
+  * [.start()](#Timer+start) ⇒ [<code>Timer</code>](#Timer)
+  * [.stop()](#Timer+stop) ⇒ [<code>Timer</code>](#Timer)
+  * [.reset()](#Timer+reset) ⇒ [<code>Timer</code>](#Timer)
   * [.isRunning()](#Timer+isRunning) ⇒ <code>Boolean</code>
 
 <a name="new_Timer_new"></a>
 
-### new Timer([duration], [callback])
+### new Timer(elapsedTime, duration, [callback])
 
-Creates a Timer instance.
+Timer constructor: Creates a new Timer instance.
+
+**Throws**:
+
+- <code>TypeError</code> If `duration` is not a number or `NaN`.
+- <code>TypeError</code> If `elapsedTime` is not a number or `NaN`.
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| [duration] | <code>Number</code> | The timer's duration (ms). If left `undefined` or `0` or negative number the timer counts up instead of down. |
+| elapsedTime | <code>Number</code> | The time that has elapsed in milliseconds. If a negative number provided, it will become `0`. If a number greater than `duration` is provided, it will become equal to `duration`. |
+| duration | <code>Number</code> | The timer's duration in milliseconds. If a negative number provided, it will become `0`. |
 | [callback] | <code>function</code> | Function to be executed while timer is running. The `Timer` instance is passed by as parameter. |
 
 <a name="Timer+time"></a>
 
 ### timer.time() ⇒ <code>Object</code>
+Get the remaining and elapsed time.
 
-Get the remaining and elapsed time.  
-If no duration is specified during initialization, the remaining time will always be `0`.
-
-**Kind**: instance method of <code>[Timer](#Timer)</code>  
-**Returns**: <code>Object</code> - An object that contains the remaining and the elapsed time in milliseconds.  
-
+**Kind**: instance method of [<code>Timer</code>](#Timer)  
+**Returns**: <code>Object</code> - An object literal that contains the remaining and the elapsed time in milliseconds.  
 <a name="Timer+start"></a>
 
-### timer.start([shouldReset]) ⇒ <code>[Timer](#Timer)</code>
+### timer.start() ⇒ [<code>Timer</code>](#Timer)
+Starts the timer. If the timer instance has been already started, the timer will just resume.
 
-Start the timer.  
-If the timer instance has been already started, the timer will just resume.
-
-**Kind**: instance method of <code>[Timer](#Timer)</code>  
-**Returns**: <code>[Timer](#Timer)</code> - The Timer instance.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [shouldReset] | <code>Boolean</code> | If set to `true`, the timer will reset to initial specified duration. |
+**Kind**: instance method of [<code>Timer</code>](#Timer)  
+**Returns**: [<code>Timer</code>](#Timer) - The Timer instance.  
 
 <a name="Timer+stop"></a>
 
-### timer.stop() ⇒ <code>[Timer](#Timer)</code>
+### timer.stop() ⇒ [<code>Timer</code>](#Timer)
+Stops/Pauses the timer.
 
-Stop/Pause the timer.
-
-**Kind**: instance method of <code>[Timer](#Timer)</code>  
-**Returns**: <code>[Timer](#Timer)</code> - The Timer instance.  
-
+**Kind**: instance method of [<code>Timer</code>](#Timer)  
+**Returns**: [<code>Timer</code>](#Timer) - The Timer instance.  
 <a name="Timer+reset"></a>
 
-### timer.reset([shouldStop]) ⇒ <code>[Timer](#Timer)</code>
+### timer.reset() ⇒ [<code>Timer</code>](#Timer)
+Resets the timer to its initial state.
 
-Resets the timer to initial specified duration.
-
-**Kind**: instance method of <code>[Timer](#Timer)</code>  
-**Returns**: <code>[Timer](#Timer)</code> - The Timer instance.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| [shouldStop] | <code>Boolean</code> | If set to `true`, the timer will be forced to stop; otherwise will reset and continue running. |
+**Kind**: instance method of [<code>Timer</code>](#Timer)  
+**Returns**: [<code>Timer</code>](#Timer) - The Timer instance.  
 
 <a name="Timer+isRunning"></a>
 
 ### timer.isRunning() ⇒ <code>Boolean</code>
+Checks (at any time) if the timer is running or not.
 
-Check (at any time) if the timer is running or not.
-
-**Kind**: instance method of <code>[Timer](#Timer)</code>  
-**Returns**: <code>Boolean</code> - True if the timer is running; otherwise false.  
-
-## Test
-
-```sh
-$ npm run test
-```
-
+**Kind**: instance method of [<code>Timer</code>](#Timer)  
+**Returns**: <code>Boolean</code> - `true` if the timer is running; otherwise `false`.  
 ## License
 
 [The MIT License (MIT)](https://georapbox.mit-license.org/@2018)

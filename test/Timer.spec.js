@@ -3,50 +3,28 @@ import Timer from '../src/index';
 let timer, elapsed, remaining;
 const onTimerRunning = instance => ({ elapsed, remaining } = instance.time());
 
-beforeEach(() => {
-  elapsed = remaining = 0;
-  timer && timer.stop();
-  timer = new Timer(200, onTimerRunning);
-});
+describe('Timer (normal flow)', () => {
+  beforeEach(() => {
+    elapsed = remaining = 0;
+    timer && timer.stop();
+    timer = new Timer(100, 200, onTimerRunning);
+  });
 
-describe('Timer', () => {
   it('initializes a timer', () => {
     expect(timer instanceof Timer).toBe(true);
   });
 
-  it('initializes a timer with no duration or using a negative number', done => {
-    const t1 = new Timer(onTimerRunning);
-    const t2 = new Timer(-1000, onTimerRunning);
-
-    t1.start();
-    t2.start();
-
-    setTimeout(() => {
-      expect(t1.time().remaining).toBe(0);
-      expect(t1.time().elapsed).toBeGreaterThan(0);
-
-      expect(t2.time().remaining).toBe(0);
-      expect(t2.time().elapsed).toBeGreaterThan(0);
-
-      t1.stop();
-      t2.stop();
-      done();
-    }, 200);
+  it('test elapsedTime', () => {
+    expect(timer._elapsedTime).toBe(100);
   });
 
-  it('starts the timer without reset', () => {
+  it('test duration', () => {
+    expect(timer._duration).toBe(200);
+  });
+
+  it('starts the timer', () => {
     timer.start();
     expect(timer._started).toBe(true);
-  });
-
-  it('starts the timer and then resets', done => {
-    timer.start(true);
-    expect(timer._started).toBe(true);
-
-    setTimeout(() => {
-      expect(timer._started).toBe(false);
-      done();
-    }, 500);
   });
 
   it('stops the timer', () => {
@@ -57,20 +35,14 @@ describe('Timer', () => {
     expect(timer._started).toBe(false);
   });
 
-  it('resets the timer without stop', () => {
+  it('resets the timer', () => {
     timer.start();
     expect(timer._started).toBe(true);
 
     timer.reset();
-    expect(timer._started).toBe(true);
-  });
-
-  it('resets the timer and then stops', () => {
-    timer.start();
-    expect(timer._started).toBe(true);
-
-    timer.reset(true);
     expect(timer._started).toBe(false);
+    expect(timer._time).toBe(100);
+    expect(timer._now).toBe(0);
   });
 
   it('executes the callback function', done => {
@@ -101,5 +73,49 @@ describe('Timer', () => {
       expect(timer.isRunning()).toBe(false);
       done();
     }, 500);
+  });
+});
+
+describe('Timer (edge cases)', () => {
+  it ('throws if elapsedTime is not a number', () => {
+    expect(() => {
+      return new Timer('0', 200);
+    }).toThrow(new TypeError('Expected a number for "elapsedTime"'));
+  });
+
+  it ('throws if elapsedTime is NaN', () => {
+    expect(() => {
+      return new Timer(NaN, 200);
+    }).toThrow(new TypeError('Expected a number for "elapsedTime"'));
+  });
+
+  it ('throws if duration is not a number', () => {
+    expect(() => {
+      return new Timer(0, '200');
+    }).toThrow(new TypeError('Expected a number for "duration"'));
+  });
+
+  it ('throws if duration is NaN', () => {
+    expect(() => {
+      return new Timer(0, NaN);
+    }).toThrow(new TypeError('Expected a number for "duration"'));
+  });
+
+  it('duration becomes 0 if negative', () => {
+    const t = new Timer(0, -1000);
+
+    expect(t._duration).toBe(0);
+  });
+
+  it('elapsedTime becomes 0 if negative', () => {
+    const t = new Timer(-1000, 1000);
+
+    expect(t._elapsedTime).toBe(0);
+  });
+
+  it('elapsedTime is greater than duration', () => {
+    const t = new Timer(1000, 0);
+
+    expect(t._elapsedTime).toBe(0);
   });
 });

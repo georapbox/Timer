@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer - Demo</title>
+  <meta name="description" content="Minimal javascript library to create and manage timers in the browser">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="//unpkg.com/@highlightjs/cdn-assets@11.4.0/styles/stackoverflow-dark.min.css">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Timer</h1>
+
+    <p>Minimal javascript library to create and manage timers in the browser</p>
+
+    <h2>Demo</h2>
+
+    <form id="form">
+      <div>
+        <label for="elapsedTime" class="form-label text-truncate">Elapsed time (ms):</label>
+        <input class="form-control" id="elapsedTime" name="elapsedTime" type="number" min="0" max="30000" step="100" value="0" required>
+      </div>
+
+      <div>
+        <label for="duration" class="form-label text-truncate">Duration (ms):</label>
+        <input class="form-control" id="duration" name="duration" type="number" min="0" max="60000" step="100" value="60000" required>
+      </div>
+
+      <input class="btn" type="submit" value="New instance">
+    </form>
+
+    <button id="start" type="button" class="btn action" title="Start timer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+      </svg>
+      <span class="visually-hidden">Start</span>
+    </button>
+
+    <button id="stop" type="button" class="btn action" title="Stop timer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
+        <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+      </svg>
+      <span class="visually-hidden">Stop</span>
+    </button>
+
+    <button id="reset" type="button" class="btn action" title="Reset timer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop-fill" viewBox="0 0 16 16">
+        <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/>
+      </svg>
+      <span class="visually-hidden">Reset</span>
+    </button>
+
+    <div id="result"></div>
+
+    <h2>Source</h2>
+
+    <p>
+      Source code and documentation can be found in <a href="https://github.com/georapbox/Timer" target="_blank" rel="noreferrer noopener">Github repository</a>.
+    </p>
+
+    <h2>License</h2>
+
+    <p>
+      <a href="https://georapbox.mit-license.org/@2018" target="_blank" rel="noreferrer noopener">The MIT License (MIT)</a>
+    </p>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
