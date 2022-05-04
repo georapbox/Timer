@@ -7,6 +7,8 @@
 - The identity of the constructor has changed from `new Timer([duration], [callback])` to `new Timer(elapsedTime, duration, [callback])` in order to support initialising the Timer with elapsed time. 
 - `elapsedTime` and `duration` parameters are both required and should be numbers other than `NaN`, otherwise it throws `TypeError`.
 - If the `duration` is a negative number, it will become `0`.
+- `start` method no longer accepts `shouldReset` argument. If you need to reset before starting, you can always chain methods, eg `reset().start()`.
+- `reset` method no longer accepts `shouldStop` argument. It now forces the timer to stop by default.
 
 ## v1.2.0 - 2021-01-21
 - Count up if user provides a negative number for `duration`.
