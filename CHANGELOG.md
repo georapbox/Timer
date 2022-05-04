@@ -10,6 +10,8 @@
 - `start` method no longer accepts `shouldReset` argument. If you need to reset before starting, you can always chain methods, eg `reset().start()`.
 - `reset` method no longer accepts `shouldStop` argument. It now forces the timer to stop by default.
 
+> Documentation for v1.2.0 can be found [here](https://www.npmjs.com/package/@georapbox/timer/v/1.2.0).
+
 ## v1.2.0 - 2021-01-21
 - Count up if user provides a negative number for `duration`.
 - Fix wrong behavior if both `duration` and `callback` not provided.
