@@ -1,5 +1,5 @@
 function now() {
-  return window && window.performance ? window.performance.now() : Date.now();
+  return 'performance' in window ? window.performance.now() : Date.now();
 }
 
 function tick(instance) {
