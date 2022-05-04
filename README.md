@@ -9,7 +9,7 @@ Minimal javascript library to create and manage timers
 
 **NOTE:** Depends on `window.requestAnimationFrame`. If your environment does not support it, you can [polyfill](https://github.com/darius/requestAnimationFrame).
 
-[API documentation](#api) &bull; [Demo](https://georapbox.github.io/timer/)
+[API documentation](#api) &bull; [Demo](https://georapbox.github.io/Timer/)
 
 ## Installation
 
