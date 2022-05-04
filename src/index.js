@@ -1,5 +1,5 @@
 function now() {
-  return window && window.performance ? window.performance.now() : Date.now;
+  return window && window.performance ? window.performance.now() : Date.now();
 }
 
 function tick(instance) {
@@ -17,11 +17,11 @@ function tick(instance) {
 
 class Timer {
   /**
-   * Timer constructor
+   * Timer constructor: Creates a new Timer instance.
    *
    * @constructor Timer
-   * @param {Number} elapsedTime The time that has elapsed in milliseconds. If negative number provided, it will become `0`. If a number greater than `duration` is provided, it will become equal to `duration`.
-   * @param {Number} duration The timer's duration in milliseconds. If negative number provided, it will become `0`.
+   * @param {Number} elapsedTime The time that has elapsed in milliseconds. If a negative number provided, it will become `0`. If a number greater than `duration` is provided, it will become equal to `duration`.
+   * @param {Number} duration The timer's duration in milliseconds. If a negative number provided, it will become `0`.
    * @param {Function} [callback] Function to be executed while timer is running. The `Timer` instance is passed by as parameter.
    * @throws {TypeError} If `duration` is not a number or `NaN`.
    * @throws {TypeError} If `elapsedTime` is not a number or `NaN`.
@@ -58,11 +58,9 @@ class Timer {
 
   /**
    * Get the remaining and elapsed time.
-   * If no duration is specified during initialization, the remaining time will always be 0.
    *
    * @memberof Timer
-   * @this {Timer}
-   * @returns {Object} An object that contains the remaining and the elapsed time in milliseconds.
+   * @returns {Object} An object literal that contains the remaining and the elapsed time in milliseconds.
    */
   time() {
     return {
@@ -72,19 +70,13 @@ class Timer {
   }
 
   /**
-   * Start the timer.
+   * Starts the timer.
    * If the timer instance has been already started, the timer will just resume.
    *
    * @memberof Timer
-   * @this {Timer}
-   * @param {Boolean} [shouldReset] If set to true, the timer will reset to initial specified duration.
    * @returns {Timer} The Timer instance.
    */
-  start(shouldReset) {
-    if (shouldReset) {
-      this.reset(true);
-    }
-
+  start() {
     if (this._started || this._duration >= 0 && this._time >= this._duration) {
       return this;
     }
@@ -96,10 +88,9 @@ class Timer {
   }
 
   /**
-   * Stop/Pause the timer.
+   * Stops/Pauses the timer.
    *
    * @memberof Timer
-   * @this {Timer}
    * @returns {Timer} The Timer instance.
    */
   stop() {
@@ -108,28 +99,23 @@ class Timer {
   }
 
   /**
-   * Resets the timer to initial specified duration.
+   * Resets the timer to its initial state.
    *
    * @memberof Timer
-   * @this {Timer}
-   * @param {Boolean} [shouldStop] If set to true, the timer will be forced to stop; otherwise will reset and continue running.
    * @returns {Timer} The Timer instance.
    */
-  reset(shouldStop) {
-    if (shouldStop) {
-      this.stop();
-    }
-
+  reset() {
+    this._started = false;
     this._time = this._elapsedTime;
+    this._now = 0;
     return this;
   }
 
   /**
-   * Check (at any time) if the timer is running or not.
+   * Checks (at any time) if the timer is running or not.
    *
    * @memberof Timer
-   * @this {Timer}
-   * @returns {Boolean} True if the timer is running; otherwise false.
+   * @returns {Boolean} `true` if the timer is running; otherwise `false`.
    */
   isRunning() {
     return this._started;

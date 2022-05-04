@@ -22,22 +22,9 @@ describe('Timer (normal flow)', () => {
     expect(timer._duration).toBe(200);
   });
 
-  it('starts the timer without reset', () => {
+  it('starts the timer', () => {
     timer.start();
     expect(timer._started).toBe(true);
-  });
-
-  it('starts the timer and then resets', done => {
-    const t = new Timer(0, 200);
-
-    t.start(true);
-
-    expect(t._started).toBe(true);
-
-    setTimeout(() => {
-      expect(timer._started).toBe(false);
-      done();
-    }, 500);
   });
 
   it('stops the timer', () => {
@@ -48,20 +35,14 @@ describe('Timer (normal flow)', () => {
     expect(timer._started).toBe(false);
   });
 
-  it('resets the timer without stop', () => {
+  it('resets the timer', () => {
     timer.start();
     expect(timer._started).toBe(true);
 
     timer.reset();
-    expect(timer._started).toBe(true);
-  });
-
-  it('resets the timer and then stops', () => {
-    timer.start();
-    expect(timer._started).toBe(true);
-
-    timer.reset(true);
     expect(timer._started).toBe(false);
+    expect(timer._time).toBe(100);
+    expect(timer._now).toBe(0);
   });
 
   it('executes the callback function', done => {
