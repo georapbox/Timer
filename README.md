@@ -28,7 +28,7 @@ import Timer from '@georapbox/timer';
 ### Using CommonJS require statement
 
 ```js
-const Timer = require('@georapbox/timer').default;
+const Timer = require('@georapbox/timer');
 ```
 
 ### As old school browser global
