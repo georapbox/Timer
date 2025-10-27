@@ -1,15 +1,16 @@
-[![npm version](https://img.shields.io/npm/v/@georapbox/Timer.svg)](https://www.npmjs.com/package/@georapbox/Timer)
-[![npm license](https://img.shields.io/npm/l/@georapbox/Timer.svg)](https://www.npmjs.com/package/@georapbox/Timer)
+[![npm version](https://img.shields.io/npm/v/@georapbox/timer.svg)](https://www.npmjs.com/package/@georapbox/timer)
+[![npm license](https://img.shields.io/npm/l/@georapbox/timer.svg)](https://www.npmjs.com/package/@georapbox/timer)
 
 [demo]: https://georapbox.github.io/Timer
 [license]: https://github.com/georapbox/Timer/blob/master/LICENSE
-[changelog]: https://github.com/georapbox/Timer/blob/main/CHANGELOG.md
+[changelog]: https://github.com/georapbox/Timer/blob/master/CHANGELOG.md
 
 # Timer
 
 A lightweight, drift-free timer library built for the browser — precise, pause-resumable, and easy to use.
 
-**NOTE:** Depends on `window.requestAnimationFrame`. If your environment does not support it, you can [polyfill](https://github.com/darius/requestAnimationFrame).
+> [!NOTE]  
+> Depends on `window.requestAnimationFrame`. If your environment does not support it, you can [polyfill](https://github.com/darius/requestAnimationFrame).
 
 [API documentation](#api) &bull; [Demo][demo]
 
