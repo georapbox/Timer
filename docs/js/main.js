@@ -1,5 +1,8 @@
-import Timer from 'https://unpkg.com/@georapbox/timer/dist/Timer.esm.min.js';
-// import Timer from '../src/index.js';
+const url = window.location.href;
+const isLocalhost = url.includes('127.0.0.1') || url.includes('localhost');
+const componentUrl = isLocalhost ? '../../dist/timer.js' : '../lib/timer.js';
+
+const { Timer } = await import(componentUrl);
 
 const $form = document.getElementById('form');
 const $result = document.getElementById('result');
@@ -29,7 +32,7 @@ $form.addEventListener('submit', evt => {
   const elapsedTime = Number($form.elapsedTime.value) || 0;
   const duration = Number($form.duration.value) || 0;
 
-  t.stop();
+  t.reset();
   t = new Timer(elapsedTime, duration, onTimerRunning);
 
   renderResult($result, t);

@@ -1,40 +1,49 @@
-[![npm version](https://img.shields.io/npm/v/@georapbox/timer.svg)](https://www.npmjs.com/package/@georapbox/timer)
-[![Build Status](https://travis-ci.com/georapbox/Timer.svg?branch=master)](https://travis-ci.com/georapbox/Timer)
-[![Coverage Status](https://coveralls.io/repos/github/georapbox/Timer/badge.svg?branch=master)](https://coveralls.io/github/georapbox/Timer?branch=master)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://georapbox.mit-license.org/@2018)
+[![npm version](https://img.shields.io/npm/v/@georapbox/Timer.svg)](https://www.npmjs.com/package/@georapbox/Timer)
+[![npm license](https://img.shields.io/npm/l/@georapbox/Timer.svg)](https://www.npmjs.com/package/@georapbox/Timer)
+
+[demo]: https://georapbox.github.io/Timer
+[license]: https://github.com/georapbox/Timer/blob/master/LICENSE
+[changelog]: https://github.com/georapbox/Timer/blob/main/CHANGELOG.md
 
 # Timer
 
-Minimal javascript library to create and manage timers
+A lightweight, drift-free timer library built for the browser — precise, pause-resumable, and easy to use.
 
 **NOTE:** Depends on `window.requestAnimationFrame`. If your environment does not support it, you can [polyfill](https://github.com/darius/requestAnimationFrame).
 
-[API documentation](#api) &bull; [Demo](https://georapbox.github.io/Timer/)
+[API documentation](#api) &bull; [Demo][demo]
 
 ## Installation
 
 ```sh
-$ npm install @georapbox/timer --save
+npm install --save @georapbox/timer
 ```
 
-The library is exported in UMD, CommonJS, and ESM formats. You can import it the following ways:
-
-### Using ESM import statement
+The library is exported in ESM format. You can import it the following way:
 
 ```js
-import Timer from '@georapbox/timer';
+import { Timer } from '@georapbox/timer';
 ```
 
-### Using CommonJS require statement
+## Usage
 
 ```js
-const Timer = require('@georapbox/timer');
-```
+import { Timer } from '@georapbox/timer';
 
-### As old school browser global
+// Create a timer with 5 seconds duration
+const timer = new Timer(0, 5000, t => {
+  const time = t.time();
+  console.log(`Elapsed: ${time.elapsed} ms, Remaining: ${time.remaining} ms`);
+});
 
-```html
-<script src="https://unpkg.com/@georapbox/timer/dist/Timer.umd.min.js"></script>
+// Start the timer
+timer.start();
+
+// After 2 seconds, stop the timer
+setTimeout(() => {
+  timer.stop();
+  console.log('Timer stopped');
+}, 2000);
 ```
 
 ## API
@@ -43,11 +52,11 @@ const Timer = require('@georapbox/timer');
 
 * [Timer](#Timer)
   * [new Timer(elapsedTime, duration, [callback])](#new_Timer_new)
-  * [.time()](#Timer+time) ⇒ <code>Object</code>
+  * [.time()](#Timer+time) ⇒ <code>{remaining: number, elapsed: number}</code>
   * [.start()](#Timer+start) ⇒ [<code>Timer</code>](#Timer)
   * [.stop()](#Timer+stop) ⇒ [<code>Timer</code>](#Timer)
   * [.reset()](#Timer+reset) ⇒ [<code>Timer</code>](#Timer)
-  * [.isRunning()](#Timer+isRunning) ⇒ <code>Boolean</code>
+  * [.isRunning()](#Timer+isRunning) ⇒ <code>boolean</code>
 
 <a name="new_Timer_new"></a>
 
@@ -63,17 +72,17 @@ Timer constructor: Creates a new Timer instance.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| elapsedTime | <code>Number</code> | The time that has elapsed in milliseconds. If a negative number provided, it will become `0`. If a number greater than `duration` is provided, it will become equal to `duration`. |
-| duration | <code>Number</code> | The timer's duration in milliseconds. If a negative number provided, it will become `0`. |
-| [callback] | <code>function</code> | Function to be executed while timer is running. The `Timer` instance is passed by as parameter. |
+| elapsedTime | <code>number</code> | The elapsed time in milliseconds. Must be between 0 and duration. |
+| duration | <code>number</code> | The total duration in milliseconds. |
+| [callback] | <code>(timer: Timer) => void</code> | Optional callback executed on each frame. It receives the `Timer` instance as an argument. |
 
 <a name="Timer+time"></a>
 
-### timer.time() ⇒ <code>Object</code>
+### timer.time() ⇒ <code>{remaining: number, elapsed: number}</code>
 Get the remaining and elapsed time.
 
 **Kind**: instance method of [<code>Timer</code>](#Timer)  
-**Returns**: <code>Object</code> - An object literal that contains the remaining and the elapsed time in milliseconds.  
+**Returns**: <code>{remaining: number, elapsed: number}</code> - An object literal that contains the remaining and the elapsed time in milliseconds.  
 <a name="Timer+start"></a>
 
 ### timer.start() ⇒ [<code>Timer</code>](#Timer)
@@ -99,11 +108,16 @@ Resets the timer to its initial state.
 
 <a name="Timer+isRunning"></a>
 
-### timer.isRunning() ⇒ <code>Boolean</code>
+### timer.isRunning() ⇒ <code>boolean</code>
 Checks (at any time) if the timer is running or not.
 
 **Kind**: instance method of [<code>Timer</code>](#Timer)  
-**Returns**: <code>Boolean</code> - `true` if the timer is running; otherwise `false`.  
+**Returns**: <code>boolean</code> - `true` if the timer is running; otherwise `false`.  
+
+## Changelog
+
+For API updates and breaking changes, check the [CHANGELOG][changelog].
+
 ## License
 
-[The MIT License (MIT)](https://georapbox.mit-license.org/@2018)
+[The MIT License (MIT)][license]
