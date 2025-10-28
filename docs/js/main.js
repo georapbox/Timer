@@ -13,18 +13,39 @@ const $reset = document.getElementById('reset');
 const elapsedTime = Number($form.elapsedTime.value) || 0;
 const duration = Number($form.duration.value) || 0;
 
-const renderResult = (el, timer) => {
-  const { elapsed, remaining } = timer.time();
+const renderResult = (el, { remaining, elapsed }) => {
   el.innerHTML = `Elapsed (ms): <code>${elapsed}</code><br/>Remaining (ms): <code>${remaining}</code>`;
 };
 
-const onTimerRunning = timer => {
-  renderResult($result, timer);
+const onStart = evt => {
+  console.log('Timer started', evt.detail);
 };
 
-let t = new Timer(elapsedTime, duration, onTimerRunning);
+const onStop = evt => {
+  console.log('Timer stopped', evt.detail);
+};
 
-renderResult($result, t);
+const onReset = evt => {
+  console.log('Timer reset', evt.detail);
+};
+
+const onFinish = evt => {
+  console.log('Timer finished', evt.detail);
+};
+
+const onTick = evt => {
+  const { remaining, elapsed } = evt.detail;
+  renderResult($result, { remaining, elapsed });
+};
+
+let t = new Timer(elapsedTime, duration)
+  .on('tick', onTick)
+  .on('start', onStart)
+  .on('stop', onStop)
+  .on('reset', onReset)
+  .on('finish', onFinish);
+
+renderResult($result, t.time());
 
 $form.addEventListener('submit', evt => {
   evt.preventDefault();
@@ -32,10 +53,16 @@ $form.addEventListener('submit', evt => {
   const elapsedTime = Number($form.elapsedTime.value) || 0;
   const duration = Number($form.duration.value) || 0;
 
-  t.reset();
-  t = new Timer(elapsedTime, duration, onTimerRunning);
+  t.reset().off('tick', onTick).off('start', onStart).off('stop', onStop).off('reset', onReset).off('finish', onFinish);
 
-  renderResult($result, t);
+  t = new Timer(elapsedTime, duration)
+    .on('tick', onTick)
+    .on('start', onStart)
+    .on('stop', onStop)
+    .on('reset', onReset)
+    .on('finish', onFinish);
+
+  renderResult($result, t.time());
 });
 
 $start.addEventListener('click', () => {
@@ -48,5 +75,5 @@ $stop.addEventListener('click', () => {
 
 $reset.addEventListener('click', () => {
   t.reset();
-  renderResult($result, t);
+  renderResult($result, t.time());
 });

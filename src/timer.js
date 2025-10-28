@@ -1,8 +1,10 @@
 // @ts-check
 
+/** @typedef {'start'|'stop'|'reset'|'finish'|'tick'} TimerEventType */
+
 /**
- * Timer class that uses `requestAnimationFrame` under the hood.
- * It’s drift-free and precise even for long durations.
+ * A high-resolution timer class that uses requestAnimationFrame for timing.
+ * Suitable for animations and time-based events in web applications.
  */
 export class Timer {
   /**
@@ -20,11 +22,10 @@ export class Timer {
    *
    * @param {number} elapsedTime - The elapsed time in milliseconds. Must be between 0 and duration.
    * @param {number} duration - The total duration in milliseconds.
-   * @param {(timer: Timer) => void} [callback] - Optional callback executed on each frame.
    * @throws {TypeError} - If `duration` is not a number or `NaN`.
    * @throws {TypeError} - If `elapsedTime` is not a number or `NaN`.
    */
-  constructor(elapsedTime, duration, callback) {
+  constructor(elapsedTime, duration) {
     if (typeof elapsedTime !== 'number' || Number.isNaN(elapsedTime)) {
       throw new TypeError('Expected a number for "elapsedTime"');
     }
@@ -37,10 +38,46 @@ export class Timer {
     this._duration = Math.max(0, duration);
     this._elapsed = Math.min(Math.max(0, elapsedTime), this._duration);
     this._initialElapsed = this._elapsed;
-    this._callback = callback || null;
     this._startTime = 0;
     this._pauseOffset = this._elapsed;
     this._tick = this._tick.bind(this);
+    this._events = new EventTarget();
+  }
+
+  /**
+   * Adds an event listener for the specified event type.
+   *
+   * @param {TimerEventType} type - The event type to listen for.
+   * @param {EventListener} handler - The event handler function.
+   * @param {boolean|AddEventListenerOptions} [options] - Optional options for the event listener.
+   * @returns {Timer} - The Timer instance.
+   */
+  on(type, handler, options) {
+    this._events.addEventListener(type, handler, options);
+    return this;
+  }
+
+  /**
+   * Removes an event listener for the specified event type.
+   *
+   * @param {TimerEventType} type - The event type to remove the listener for.
+   * @param {EventListener} handler - The event handler function to remove.
+   * @param {boolean|EventListenerOptions} [options] - Optional options for the event listener.
+   * @returns {Timer} - The Timer instance.
+   */
+  off(type, handler, options) {
+    this._events.removeEventListener(type, handler, options);
+    return this;
+  }
+
+  /**
+   * Emits an event of the specified type.
+   *
+   * @param {TimerEventType} type - The event type to emit.
+   */
+  _emit(type) {
+    const evt = new CustomEvent(type, { detail: this.time() });
+    this._events.dispatchEvent(evt);
   }
 
   /**
@@ -56,14 +93,14 @@ export class Timer {
     const elapsed = Timer.now() - this._startTime + this._pauseOffset;
     this._elapsed = Math.min(elapsed, this._duration);
 
-    if (typeof this._callback === 'function') {
-      this._callback(this);
-    }
+    this._emit('tick');
 
     if (elapsed < this._duration) {
       requestAnimationFrame(this._tick);
     } else {
-      this.stop();
+      this._running = false;
+      this._pauseOffset = this._elapsed;
+      this._emit('finish');
     }
   }
 
@@ -77,6 +114,7 @@ export class Timer {
     }
     this._running = true;
     this._startTime = Timer.now();
+    this._emit('start');
     requestAnimationFrame(this._tick);
     return this;
   }
@@ -93,6 +131,7 @@ export class Timer {
     }
     this._running = false;
     this._pauseOffset = this._elapsed;
+    this._emit('stop');
     return this;
   }
 
@@ -106,6 +145,7 @@ export class Timer {
     this._elapsed = this._initialElapsed;
     this._pauseOffset = this._initialElapsed;
     this._startTime = 0;
+    this._emit('reset');
     return this;
   }
 

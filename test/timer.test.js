@@ -27,23 +27,23 @@ describe('Timer (public API, no timing precision assertions)', () => {
   });
 
   it('throws if elapsedTime is not a number', () => {
-    expect(() => new Timer('100', 1000, () => {})).to.throw(TypeError, 'Expected a number for "elapsedTime"');
-    expect(() => new Timer(NaN, 1000, () => {})).to.throw(TypeError, 'Expected a number for "elapsedTime"');
+    expect(() => new Timer('100', 1000)).to.throw(TypeError, 'Expected a number for "elapsedTime"');
+    expect(() => new Timer(NaN, 1000)).to.throw(TypeError, 'Expected a number for "elapsedTime"');
   });
 
   it('throws if duration is not a number', () => {
-    expect(() => new Timer(0, '1000', () => {})).to.throw(TypeError, 'Expected a number for "duration"');
-    expect(() => new Timer(0, NaN, () => {})).to.throw(TypeError, 'Expected a number for "duration"');
+    expect(() => new Timer(0, '1000')).to.throw(TypeError, 'Expected a number for "duration"');
+    expect(() => new Timer(0, NaN)).to.throw(TypeError, 'Expected a number for "duration"');
   });
 
   it('is not running by default and reports full remaining time', () => {
-    const t = new Timer(0, 1000, () => {});
+    const t = new Timer(0, 1000);
     expect(t.isRunning()).to.be.false;
     expect(t.time()).to.deep.equal({ elapsed: 0, remaining: 1000 });
   });
 
   it('if already started, start() is a no-op', () => {
-    const t = new Timer(0, 1000, () => {});
+    const t = new Timer(0, 1000);
     t.start();
     const firstState = t.isRunning();
     t.start();
@@ -53,7 +53,7 @@ describe('Timer (public API, no timing precision assertions)', () => {
   });
 
   it('time() advances while running and does not advance while stopped', () => {
-    const t = new Timer(0, 1000, () => {});
+    const t = new Timer(0, 1000);
     t.start();
 
     // drive a couple frames
@@ -74,7 +74,7 @@ describe('Timer (public API, no timing precision assertions)', () => {
   });
 
   it('if already stopped, stop() is a no-op', () => {
-    const t = new Timer(0, 1000, () => {});
+    const t = new Timer(0, 1000);
     t.start();
     t.stop();
     const firstState = t.isRunning();
@@ -85,7 +85,7 @@ describe('Timer (public API, no timing precision assertions)', () => {
   });
 
   it('stops automatically once duration passes and clamps elapsed to duration', () => {
-    const t = new Timer(0, 200, () => {});
+    const t = new Timer(0, 200);
     t.start();
 
     // advance well beyond duration
@@ -98,7 +98,7 @@ describe('Timer (public API, no timing precision assertions)', () => {
   });
 
   it('does not restart after completion (start() is ignored once finished)', () => {
-    const t = new Timer(0, 100, () => {});
+    const t = new Timer(0, 100);
     t.start();
     clock.tick(1000); // finish
 
@@ -111,7 +111,7 @@ describe('Timer (public API, no timing precision assertions)', () => {
   });
 
   it('reset() returns to the initial elapsed and stops the timer', () => {
-    const t = new Timer(200, 1000, () => {}); // initial elapsed 200
+    const t = new Timer(200, 1000); // initial elapsed 200
     t.start();
     clock.tick(300); // run a bit
     t.reset();
@@ -121,7 +121,7 @@ describe('Timer (public API, no timing precision assertions)', () => {
   });
 
   it('pause then resume preserves elapsed and still finishes at duration', () => {
-    const t = new Timer(0, 500, () => {});
+    const t = new Timer(0, 500);
     t.start();
 
     clock.tick(150); // some progress
@@ -141,7 +141,7 @@ describe('Timer (public API, no timing precision assertions)', () => {
   });
 
   it('duration = Infinity: runs indefinitely and remaining stays Infinity', () => {
-    const t = new Timer(0, Infinity, () => {});
+    const t = new Timer(0, Infinity);
     t.start();
 
     clock.tick(10 * 60 * 1000); // advance 10 minutes
@@ -156,9 +156,10 @@ describe('Timer (public API, no timing precision assertions)', () => {
     expect(t.isRunning()).to.be.false;
   });
 
-  it('invokes the callback while running and not after stopped', () => {
+  it('triggers tick events while running and stops triggering after stop()', () => {
     const cb = sinon.spy();
-    const t = new Timer(0, 200, cb);
+    const t = new Timer(0, 200);
+    t.on('tick', cb);
     t.start();
 
     clock.tick(60); // some frames
@@ -169,5 +170,51 @@ describe('Timer (public API, no timing precision assertions)', () => {
     const callsAtStop = cb.callCount;
     clock.tick(200);
     expect(cb.callCount).to.equal(callsAtStop); // no more calls after stop()
+  });
+
+  it('triggers finish event once upon completion', () => {
+    const cb = sinon.spy();
+    const t = new Timer(0, 100);
+    t.on('finish', cb);
+    t.start();
+
+    clock.tick(500); // advance well beyond duration
+    expect(cb).to.have.been.calledOnce;
+  });
+
+  it('triggers start, stop, reset events appropriately', () => {
+    const startCb = sinon.spy();
+    const stopCb = sinon.spy();
+    const resetCb = sinon.spy();
+
+    const t = new Timer(0, 300);
+    t.on('start', startCb);
+    t.on('stop', stopCb);
+    t.on('reset', resetCb);
+
+    t.start();
+    expect(startCb).to.have.been.calledOnce;
+
+    t.stop();
+    expect(stopCb).to.have.been.calledOnce;
+
+    t.reset();
+    expect(resetCb).to.have.been.calledOnce;
+  });
+
+  it('allows removing event listeners with off()', () => {
+    const cb = sinon.spy();
+    const t = new Timer(0, 100);
+    t.on('tick', cb);
+    t.start();
+
+    clock.tick(50);
+    const callsWhileRegistered = cb.callCount;
+    expect(callsWhileRegistered).to.be.greaterThan(0);
+
+    t.off('tick', cb);
+    const callsAtOff = cb.callCount;
+    clock.tick(100);
+    expect(cb.callCount).to.equal(callsAtOff); // no more calls after off()
   });
 });
