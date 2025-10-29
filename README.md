@@ -28,19 +28,20 @@ import { Timer } from '@georapbox/timer';
 ### Constructor
 
 ```js
-new Timer(elapsedTime, duration)
+new Timer({ elapsed, duration })
 ```
 
-**Parameters**
+**Options**
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| `elapsedTime` | `number` | Initial elapsed time in milliseconds. Clamped to `[0, duration]`. Use `0` to start fresh. |
-| `duration` | `number` | Total duration in milliseconds. Use `Infinity` for an endless timer. |
+| `elapsed` | `number` | Initial elapsed time in milliseconds. Default: `0`. Must be ≥ `0`. |
+| `duration` | `number` | Total duration in milliseconds. Default: `Infinity`. Must be ≥ `0` or `Infinity`. |
+
 
 **Throws**
 
-- `TypeError` if either argument is not a number or is `NaN`.
+- `TypeError` if either `elapsed` or `duration` is not a number.
 
 **Notes**
 
@@ -65,7 +66,7 @@ Stops and resets the timer to its initial elapsed time (the value passed at cons
 
 #### `time()`
 
-Returns the current timing info:
+Returns a snapshot of the timer's current time state:
 
 ```js
 const { elapsed, remaining } = timer.time();
@@ -74,11 +75,7 @@ const { elapsed, remaining } = timer.time();
 - `elapsed` — elapsed time in ms
 - `remaining` — remaining time in ms (`Infinity` if `duration` is `Infinity`)
 
-#### `isRunning()`
-
-Returns `true` if the timer is currently running.
-
-### `on(type, listener)`, `off(type, listener)`
+#### `on(type, listener, options)`, `off(type, listener, options)`
 
 Attach, detach, event listeners for timer events.  
 (See [Events](#events) below for details.)
@@ -90,26 +87,40 @@ Attach, detach, event listeners for timer events.
 Returns a high-resolution, monotonic timestamp in milliseconds.
 Uses `performance.now()` when available, otherwise falls back to `Date.now()`.
 
+### Properties
+
+#### `elapsed`
+
+Returns the current elapsed time in milliseconds.
+
+#### `remaining`
+
+Returns the remaining time in milliseconds (`Infinity` if `duration` is `Infinity`).
+
+#### `running`
+
+Returns `true` if the timer is currently running; otherwise `false`.
+
 ### Events
 
-Timer emits **DOM CustomEvents**. Event data is provided via the `detail` field.
+Timer emits **DOM Events** to signal state changes. You can listen to these events using the `on` and `off` methods.
 
-| Event Name | Description | Event Detail |
-| ---------- | ----------- | ------------ |
-| `tick` | Emitted on each frame frame while running. | `{elapsed: number, remaining: number}` |
-| `start` | Emitted when the timer starts or resumes. | `{elapsed: number, remaining: number}` |
-| `stop` | Emitted when the timer is paused. | `{elapsed: number, remaining: number}` |
-| `reset` | Emitted when the timer is reset. | `{elapsed: number, remaining: number}` |
-| `finish` | Emitted when the timer reaches its duration. | `{elapsed: number, remaining: number}` |
+| Event Name | Description |
+| ---------- | ----------- |
+| `tick` | Emitted on each frame frame while running. |
+| `start` | Emitted when the timer starts or resumes. |
+| `stop` | Emitted when the timer is paused. |
+| `reset` | Emitted when the timer is reset. |
+| `finish` | Emitted when the timer reaches its duration. |
 
 ### Usage Examples
 
 #### Basic Countdown
 
 ```js
-const timer = new Timer(0, 10_000) // 10 seconds
-  .on('tick', (e) => {
-    const { remaining } = e.detail;
+const timer = new Timer({ duration: 10_000 })
+  .on('tick', evt => {
+    const { remaining } = evt.currentTarget;
     label.textContent = `${Math.ceil(remaining / 1000)}s`;
   })
   .on('finish', () => {
@@ -130,7 +141,7 @@ timer.start(); // Resume
 #### Reset
 
 ```js
-const t = new Timer(2000, 10_000); // start "2s in"
+const t = new Timer({ elapsed: 2000, duration: 10_000 }); // start "2s in"
 t.start();
 // ...
 t.reset(); // back to 2000ms elapsed
@@ -139,7 +150,7 @@ t.reset(); // back to 2000ms elapsed
 #### Infinite timer
 
 ```js
-const infiniteTimer = new Timer(0, Infinity)
+const infiniteTimer = new Timer({ duration: Infinity })
   .on('tick', () => console.log('Timer is running indefinitely'))
   .start();
 ```
