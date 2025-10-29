@@ -26,10 +26,10 @@
 
     <h2>Demo</h2>
 
-    <form id="form">
+    <form id="form" autocomplete="off">
       <div>
-        <label for="elapsedTime" class="form-label text-truncate">Elapsed time (ms):</label>
-        <input class="form-control" id="elapsedTime" name="elapsedTime" type="number" min="0" max="30000" step="100" value="0" required>
+        <label for="elapsed" class="form-label text-truncate">Elapsed time (ms):</label>
+        <input class="form-control" id="elapsed" name="elapsed" type="number" min="0" max="30000" step="100" value="0" required>
       </div>
 
       <div>
@@ -60,7 +60,13 @@
       </button>
     </div>
 
-    <div id="result"></div>
+    <div class="result">
+      Elapsed (ms): <code id="resElapsed"></code>
+      <br>
+      Remaining (ms): <code id="resRemaining"></code>
+      <br>
+      <progress></progress>
+    </div>
 
     <h2>License</h2>
 

@@ -1,9 +1,10 @@
 :root {
   --max-width: 37.5rem; /* 600px */
+  --accent: #1a73e8;
   --bg-color: #faf8f8;
   --text-color: #303942;
-  --link-color: #1a73e8;
-  --button-bg-color: var(--link-color);
+  --link-color: var(--accent);
+  --button-bg-color: var(--accent);
   --button-text-color: #ffffff;
   --border-color: #d7dade;
   --text-success: #198754;
@@ -11,14 +12,17 @@
   --form-control-bg-color: #ffffff;
   --form-control-border-color: #ced4da;
   --code-color: #d63384;
+  --progress-bg-color: var(--accent);
+
+  color-scheme: light dark;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --accent: #8ab4f8;
     --bg-color: #202125;
     --text-color: #cccccc;
-    --link-color: #8ab4f8;
-    --button-bg-color: var(--link-color);
+    --link-color: var(--accent);
     --button-text-color: #202125;
     --border-color: #51555c;
     --text-success: #69d380;
@@ -31,7 +35,7 @@
 
 .noscript-banner {
   width: 100%;
-  padding: 1.5rem;
+  padding: 1rem;
   margin: 1rem auto 1.5rem auto;
   border-radius: 0.25rem;
   border: 1px solid var(--border-color);
@@ -96,6 +100,7 @@ code {
   font-size: 1rem;
   cursor: pointer;
   appearance: none;
+  -webkit-appearance: none;
 }
 
 .success { color: var(--text-success); }
@@ -146,10 +151,11 @@ form div {
   background-color: var(--form-control-bg-color);
   border: 1px solid var(--form-control-border-color);
   appearance: none;
+  -webkit-appearance: none;
   border-radius: 0.25rem;
 }
 
-#result {
+.result {
   margin-bottom: 1rem;
   padding: 1rem;
   border: 1px solid var(--border-color);
@@ -158,7 +164,7 @@ form div {
   background-color: var(--form-control-bg-color);
 }
 
-#result:empty {
+.result:empty {
   display: none;
 }
 
@@ -174,4 +180,28 @@ form div {
   width: 2rem;
   height: 2rem;
   line-height: 1;
+}
+
+progress {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 0.625rem;
+  border: 1px solid var(--border-color);
+  border-radius: 50rem;
+  background-color: var(--bg-color);
+  overflow: hidden;
+}
+
+progress::-webkit-progress-bar {
+  background-color: var(--body-bg-color);
+  border-radius: 50rem;
+}
+
+progress::-webkit-progress-value {
+  background: var(--progress-bg-color);
+}
+
+progress::-moz-progress-bar {
+  background: var(--progress-bg-color);
 }

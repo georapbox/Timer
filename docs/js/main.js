@@ -5,64 +5,74 @@ const componentUrl = isLocalhost ? '../../dist/timer.js' : '../lib/timer.js';
 const { Timer } = await import(componentUrl);
 
 const $form = document.getElementById('form');
-const $result = document.getElementById('result');
 const $start = document.getElementById('start');
 const $stop = document.getElementById('stop');
 const $reset = document.getElementById('reset');
+const $resElapsed = document.getElementById('resElapsed');
+const $resRemaining = document.getElementById('resRemaining');
+const $progress = document.querySelector('progress');
 
-const elapsedTime = Number($form.elapsedTime.value) || 0;
+const elapsed = Number($form.elapsed.value) || 0;
 const duration = Number($form.duration.value) || 0;
 
-const renderResult = (el, { remaining, elapsed }) => {
-  el.innerHTML = `Elapsed (ms): <code>${elapsed}</code><br/>Remaining (ms): <code>${remaining}</code>`;
+const renderResult = ({ remaining, elapsed }) => {
+  $resElapsed.textContent = elapsed;
+  $resRemaining.textContent = remaining;
+  $progress.max = elapsed + remaining;
+  $progress.value = elapsed;
 };
 
-const onStart = evt => {
-  console.log('Timer started', evt.detail);
+const onTimerStart = evt => {
+  console.log('Timer started', evt.currentTarget.time());
 };
 
-const onStop = evt => {
-  console.log('Timer stopped', evt.detail);
+const onTimerStop = evt => {
+  console.log('Timer stopped', evt.currentTarget.time());
 };
 
-const onReset = evt => {
-  console.log('Timer reset', evt.detail);
+const onTimerReset = evt => {
+  console.log('Timer reset', evt.currentTarget.time());
 };
 
-const onFinish = evt => {
-  console.log('Timer finished', evt.detail);
+const onTimerFinish = evt => {
+  console.log('Timer finished', evt.currentTarget.time());
 };
 
-const onTick = evt => {
-  const { remaining, elapsed } = evt.detail;
-  renderResult($result, { remaining, elapsed });
+const onTimerTick = evt => {
+  const { remaining, elapsed } = evt.currentTarget.time();
+  renderResult({ remaining, elapsed });
 };
 
-let t = new Timer(elapsedTime, duration)
-  .on('tick', onTick)
-  .on('start', onStart)
-  .on('stop', onStop)
-  .on('reset', onReset)
-  .on('finish', onFinish);
+let t = new Timer({ elapsed, duration })
+  .on('tick', onTimerTick)
+  .on('start', onTimerStart)
+  .on('stop', onTimerStop)
+  .on('reset', onTimerReset)
+  .on('finish', onTimerFinish);
 
-renderResult($result, t.time());
+renderResult(t.time());
 
 $form.addEventListener('submit', evt => {
   evt.preventDefault();
 
-  const elapsedTime = Number($form.elapsedTime.value) || 0;
+  const elapsed = Number($form.elapsed.value) || 0;
   const duration = Number($form.duration.value) || 0;
 
-  t.reset().off('tick', onTick).off('start', onStart).off('stop', onStop).off('reset', onReset).off('finish', onFinish);
+  t.stop()
+    .off('tick', onTimerTick)
+    .off('start', onTimerStart)
+    .off('stop', onTimerStop)
+    .off('reset', onTimerReset)
+    .off('finish', onTimerFinish);
 
-  t = new Timer(elapsedTime, duration)
-    .on('tick', onTick)
-    .on('start', onStart)
-    .on('stop', onStop)
-    .on('reset', onReset)
-    .on('finish', onFinish);
+  t = new Timer({ elapsed, duration })
+    .on('tick', onTimerTick)
+    .on('start', onTimerStart)
+    .on('stop', onTimerStop)
+    .on('reset', onTimerReset)
+    .on('finish', onTimerFinish);
 
-  renderResult($result, t.time());
+  renderResult(t.time());
 });
 
 $start.addEventListener('click', () => {
@@ -75,5 +85,5 @@ $stop.addEventListener('click', () => {
 
 $reset.addEventListener('click', () => {
   t.reset();
-  renderResult($result, t.time());
+  renderResult(t.time());
 });
