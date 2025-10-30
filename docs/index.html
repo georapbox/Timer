@@ -13,7 +13,7 @@
   <noscript>
     <div class="noscript-banner">
       <strong>JavaScript is disabled</strong><br>
-      Some features may not work as expected. Please enable Javascript in your browser settings.
+      Some features may not work as expected. Please enable JavaScript in your browser settings.
     </div>
   </noscript>
 
@@ -25,6 +25,14 @@
     <p><a href="https://github.com/georapbox/Timer" target="_blank" rel="noreferrer noopener">Source code & documentation</a></p>
 
     <h2>Demo</h2>
+
+    <div class="info-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--accent)" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M6 9a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 6 9M3.854 4.146a.5.5 0 1 0-.708.708L4.793 6.5 3.146 8.146a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708l-2-2z"></path>
+        <path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"></path>
+      </svg>
+      <small><em>Open the browser's console to watch emitted events.</em></small>
+    </div>
 
     <form id="form" autocomplete="off">
       <div>
@@ -61,9 +69,9 @@
     </div>
 
     <div class="result">
-      Elapsed (ms): <code id="resElapsed"></code>
+      Elapsed (ms): <code id="elapsed-placeholder"></code>
       <br>
-      Remaining (ms): <code id="resRemaining"></code>
+      Remaining (ms): <code id="remaining-placeholder"></code>
       <br>
       <progress></progress>
     </div>

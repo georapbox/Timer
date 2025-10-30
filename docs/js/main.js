@@ -4,86 +4,79 @@ const componentUrl = isLocalhost ? '../../dist/timer.js' : '../lib/timer.js';
 
 const { Timer } = await import(componentUrl);
 
-const $form = document.getElementById('form');
-const $start = document.getElementById('start');
-const $stop = document.getElementById('stop');
-const $reset = document.getElementById('reset');
-const $resElapsed = document.getElementById('resElapsed');
-const $resRemaining = document.getElementById('resRemaining');
-const $progress = document.querySelector('progress');
+const formEl = document.getElementById('form');
+const startBtn = document.getElementById('start');
+const stopBtn = document.getElementById('stop');
+const resetBtn = document.getElementById('reset');
+const elapsedEl = document.getElementById('elapsed-placeholder');
+const remainingEl = document.getElementById('remaining-placeholder');
+const progressEl = document.querySelector('progress');
 
-const elapsed = Number($form.elapsed.value) || 0;
-const duration = Number($form.duration.value) || 0;
+let timer;
 
-const renderResult = ({ remaining, elapsed }) => {
-  $resElapsed.textContent = elapsed;
-  $resRemaining.textContent = remaining;
-  $progress.max = elapsed + remaining;
-  $progress.value = elapsed;
-};
+makeTimer({
+  elapsed: Number(formEl.elapsed.value) || 0,
+  duration: Number(formEl.duration.value) || 0
+});
 
-const onTimerStart = evt => {
-  console.log('Timer started', evt.currentTarget.time());
-};
-
-const onTimerStop = evt => {
-  console.log('Timer stopped', evt.currentTarget.time());
-};
-
-const onTimerReset = evt => {
-  console.log('Timer reset', evt.currentTarget.time());
-};
-
-const onTimerFinish = evt => {
-  console.log('Timer finished', evt.currentTarget.time());
-};
-
-const onTimerTick = evt => {
-  const { remaining, elapsed } = evt.currentTarget.time();
-  renderResult({ remaining, elapsed });
-};
-
-let t = new Timer({ elapsed, duration })
-  .on('tick', onTimerTick)
-  .on('start', onTimerStart)
-  .on('stop', onTimerStop)
-  .on('reset', onTimerReset)
-  .on('finish', onTimerFinish);
-
-renderResult(t.time());
-
-$form.addEventListener('submit', evt => {
+formEl.addEventListener('submit', evt => {
   evt.preventDefault();
-
-  const elapsed = Number($form.elapsed.value) || 0;
-  const duration = Number($form.duration.value) || 0;
-
-  t.stop()
-    .off('tick', onTimerTick)
-    .off('start', onTimerStart)
-    .off('stop', onTimerStop)
-    .off('reset', onTimerReset)
-    .off('finish', onTimerFinish);
-
-  t = new Timer({ elapsed, duration })
-    .on('tick', onTimerTick)
-    .on('start', onTimerStart)
-    .on('stop', onTimerStop)
-    .on('reset', onTimerReset)
-    .on('finish', onTimerFinish);
-
-  renderResult(t.time());
+  const elapsed = Math.max(0, Number(formEl.elapsed.value) || 0);
+  const duration = Math.max(0, Number(formEl.duration.value) || 0);
+  makeTimer({ elapsed, duration });
 });
+startBtn.addEventListener('click', () => timer.start());
+stopBtn.addEventListener('click', () => timer.stop());
+resetBtn.addEventListener('click', () => (timer.reset(), render(timer)));
 
-$start.addEventListener('click', () => {
-  t.start();
-});
+function render(timer) {
+  const { remaining, elapsed } = timer.time();
+  elapsedEl.textContent = elapsed.toFixed(2);
+  remainingEl.textContent = remaining.toFixed(2);
+  progressEl.max = elapsed + remaining;
+  progressEl.value = elapsed;
+}
 
-$stop.addEventListener('click', () => {
-  t.stop();
-});
+function makeTimer({ elapsed, duration }) {
+  if (timer) {
+    timer
+      .off('start', onStart)
+      .off('tick', onTick)
+      .off('stop', onStop)
+      .off('reset', onReset)
+      .off('finish', onFinish)
+      .stop();
+  }
 
-$reset.addEventListener('click', () => {
-  t.reset();
-  renderResult(t.time());
-});
+  timer = new Timer({ elapsed, duration })
+    .on('start', onStart)
+    .on('tick', onTick)
+    .on('stop', onStop)
+    .on('reset', onReset)
+    .on('finish', onFinish);
+
+  render(timer);
+
+  return timer;
+}
+
+function onStart(evt) {
+  console.log('Timer started', evt.currentTarget.time());
+}
+
+function onTick(evt) {
+  render(evt.currentTarget);
+}
+
+function onStop(evt) {
+  console.log('Timer stopped', evt.currentTarget.time());
+}
+
+function onReset(evt) {
+  console.log('Timer reset', evt.currentTarget.time());
+}
+
+function onFinish(evt) {
+  console.log('Timer finished', evt.currentTarget.time());
+  progressEl.value = progressEl.max;
+}
