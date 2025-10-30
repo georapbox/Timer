@@ -103,15 +103,46 @@ Returns `true` if the timer is currently running; otherwise `false`.
 
 ### Events
 
-Timer emits **DOM Events** to signal state changes. You can listen to these events using the `on` and `off` methods.
+The Timer instance emits standard `Event` objects using the DOM [`EventTarget`](https://developer.mozilla.org/docs/Web/API/EventTarget) API to signal state changes during its lifecycle. You can subscribe using `.on()` and unsubscribe using `.off()` methods.
 
-| Event Name | Description |
-| ---------- | ----------- |
-| `tick` | Emitted on each frame frame while running. |
-| `start` | Emitted when the timer starts or resumes. |
-| `stop` | Emitted when the timer is paused. |
-| `reset` | Emitted when the timer is reset. |
-| `finish` | Emitted when the timer reaches its duration. |
+| Event Name | Fired When | Notes |
+| ---------- | ---------- | ----- |
+| `start` | The timer starts or resumes after being stopped. | Fired once per start. |
+| `tick` | On each animation frame while running. | Frequency depends on the browser's `requestAnimationFrame` (≈60fps). |
+| `stop` | The timer is paused manually. | Elapsed time is preserved for resuming. |
+| `reset` | The timer is reset to its initial elapsed time. | Stops the timer if running. |
+| `finish` | The timer reaches its total duration. | Fired once automatically at completion. |
+
+> [!NOTE]
+> Events are standard `Event` objects (not `CustomEvent`s) emitted through the DOM `EventTarget` interface. They don't bubble through the document — they're scoped to the `Timer` instance itself.  
+> To access timing data, call `.time()` or read `.elapsed` / `.remaining` from the event's `currentTarget`. 
+
+> [!IMPORTANT]
+> When removing listeners with `.off()`, you must pass the **same function reference** you used with `.on()`.  
+> Creating a new anonymous function won't remove the previous listener — this mirrors native `addEventListener` / `removeEventListener` behavior in the DOM.
+
+```js
+const timer = new Timer({ duration: 5000 });
+
+const onStart = () => console.log('Timer started');
+const onTick = evt => {
+  const { elapsed, remaining } = evt.currentTarget.time();
+  console.log(`Elapsed: ${elapsed}ms, Remaining: ${remaining}ms`);
+};
+const onFinish = () => console.log('Timer finished');
+
+timer
+  .on('start', onStart)
+  .on('tick', onTick)
+  .on('finish', onFinish)
+  .start();
+
+  // Later...
+  timer.
+    off('start', onStart)
+    .off('tick', onTick)
+    .off('finish', onFinish);
+```
 
 ### Usage Examples
 
