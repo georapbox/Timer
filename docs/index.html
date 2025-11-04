@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timer - Demo</title>
+  <title>Timer</title>
   <meta name="description" content="A lightweight, drift-free timer library built for the browser — precise, pause-resumable, and easy to use.">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="stylesheet" href="lib/highlight/highlight-github.css">
+  <script src="lib/highlight/highlight.min.js" defer></script>
   <link rel="stylesheet" href="css/main.css">
   <script type="module" src="js/main.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', () => window.hljs.highlightAll());</script>
 </head>
 <body>
   <noscript>
@@ -75,6 +78,67 @@
       <br>
       <progress></progress>
     </div>
+
+    <h3>Source Code</h3>
+
+    <p>
+      Sample code to create and control a Timer instance with a duration of 60,000 milliseconds (1 minute).
+    </p>
+
+<pre><code class="hljs language-xml">&lt;div&gt;
+  &lt;button id="start" type="button"&gt;Start&lt;/button&gt;
+  &lt;button id="stop" type="button"&gt;Stop&lt;/button&gt;
+  &lt;button id="reset" type="button"&gt;Reset&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+  Elapsed (ms): &lt;code id="elapsed"&gt;&lt;/code&gt;
+  &lt;br&gt;
+  Remaining (ms): &lt;code id="remaining"&gt;&lt;/code&gt;
+  &lt;br&gt;
+  &lt;progress id="progress"&gt;&lt;/progress&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  const startBtn = document.getElementById('start');
+  const stopBtn = document.getElementById('stop');
+  const resetBtn = document.getElementById('reset');
+  const elapsedEl = document.getElementById('elapsed');
+  const remainingEl = document.getElementById('remaining');
+  const progressEl = document.getElementById('progress');
+
+  function render(timer) {
+    const { remaining, elapsed } = timer.time();
+    elapsedEl.textContent = elapsed.toFixed(2);
+    remainingEl.textContent = remaining.toFixed(2);
+    progressEl.max = elapsed + remaining;
+    progressEl.value = elapsed;
+  }
+
+  function onTimerTick(evt) {
+    render(evt.currentTarget);
+  }
+
+  const timer = new Timer({
+    duration: 60_000,
+    elapsed: 0
+  }).on('tick', onTimerTick);
+
+  startBtn.addEventListener('click', () => {
+    timer.start()
+  });
+
+  stopBtn.addEventListener('click', () => {
+    timer.stop()
+  });
+
+  resetBtn.addEventListener('click', () => {
+    timer.reset();
+    render(timer);
+  });
+
+  render(timer);
+&lt;/script&gt;</code></pre>
 
     <h2>License</h2>
 
