@@ -1,24 +1,31 @@
 {
   "name": "@georapbox/timer",
-  "version": "2.0.0",
-  "description": "Minimal javascript library to create and manage timers in the browser",
-  "main": "dist/Timer.umd.min.js",
-  "module": "dist/Timer.esm.min.js",
-  "unpkg": "dist/Timer.umd.min.js",
+  "version": "3.0.0",
+  "description": "A lightweight, drift-free timer library built for the browser — precise, pause-resumable, and easy to use.",
+  "main": "dist/timer.js",
+  "module": "dist/timer.js",
+  "unpkg": "dist/timer.js",
+  "type": "module",
+  "types": "dist/timer.d.ts",
   "files": [
     "src/",
     "dist/"
   ],
   "scripts": {
-    "build": "rollup -c --environment BUILD:production",
-    "dev": "rollup -c -w",
-    "lint": "eslint src/**/*.js",
-    "test": "jest --config jest.config.js",
+    "lint": "eslint",
+    "format": "prettier --ignore-unknown --write .",
+    "test": "web-test-runner",
     "test:watch": "npm run test -- --watch",
     "test:coverage": "npm run test -- --coverage",
-    "coveralls": "npm run test:coverage && cat ./coverage/lcov.info | coveralls",
-    "clean": "rimraf dist coverage",
-    "prepare": "npm-run-all clean lint test build"
+    "types": "tsc --project tsconfig.json",
+    "dev:esbuild": "node ./scripts/dev.mjs",
+    "dev": "npm-run-all clean dev:esbuild",
+    "serve:dev": "web-dev-server --node-resolve --open /docs/ --watch",
+    "start": "npm-run-all --parallel \"serve:dev -- {1}\" dev",
+    "build:esbuild": "node ./scripts/build.mjs",
+    "build": "npm-run-all clean build:esbuild",
+    "clean": "rimraf dist",
+    "prepare": "npm-run-all clean lint test build types"
   },
   "repository": {
     "type": "git",
@@ -29,27 +36,32 @@
     "timers",
     "javascript"
   ],
-  "author": "George Raptis <georapbox@gmail.com>",
+  "author": {
+    "name": "George Raptis",
+    "email": "georapbox@gmail.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/georapbox/Timer/issues"
   },
   "homepage": "https://github.com/georapbox/Timer#readme",
   "devDependencies": {
-    "@babel/core": "~7.17.10",
-    "@babel/plugin-proposal-object-rest-spread": "~7.17.3",
-    "@babel/preset-env": "~7.17.10",
-    "@babel/register": "~7.17.7",
-    "@rollup/plugin-babel": "~5.3.1",
-    "coveralls": "~3.1.1",
-    "cross-env": "~7.0.2",
-    "eslint": "~8.14.0",
-    "jest": "~28.0.3",
-    "jest-environment-jsdom": "~28.0.2",
+    "@eslint/js": "~9.38.0",
+    "@esm-bundle/chai": "~4.3.4-fix.0",
+    "@open-wc/testing": "~4.0.0",
+    "@web/dev-server": "~0.4.6",
+    "@web/test-runner": "~0.20.2",
+    "@web/test-runner-playwright": "~0.11.1",
+    "esbuild": "~0.25.11",
+    "eslint": "~9.38.0",
+    "globals": "~16.4.0",
     "npm-run-all": "~4.1.5",
-    "rimraf": "~3.0.2",
-    "rollup": "~2.71.1",
-    "rollup-plugin-terser": "~7.0.2"
+    "prettier": "~3.6.2",
+    "rimraf": "~6.0.1",
+    "sinon": "~21.0.0",
+    "typescript": "~5.9.3"
   },
-  "browserslist": "> 0.5%, last 2 versions, Firefox ESR, not dead"
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -59,8 +59,6 @@ typings/
 
 # production
 dist
-lib
 
 # misc
 .DS_Store
-demo/

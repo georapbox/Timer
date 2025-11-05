@@ -2,29 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timer - Demo</title>
-  <meta name="description" content="Minimal javascript library to create and manage timers in the browser">
+  <title>Timer</title>
+  <meta name="description" content="A lightweight, drift-free timer library built for the browser — precise, pause-resumable, and easy to use.">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="//unpkg.com/@highlightjs/cdn-assets@11.4.0/styles/stackoverflow-dark.min.css">
-  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="lib/highlight/highlight-github.css">
+  <script src="lib/highlight/highlight.min.js" defer></script>
+  <link rel="stylesheet" href="css/main.css">
+  <script type="module" src="js/main.js"></script>
+  <script>document.addEventListener('DOMContentLoaded', () => window.hljs.highlightAll());</script>
 </head>
 <body>
+  <noscript>
+    <div class="noscript-banner">
+      <strong>JavaScript is disabled</strong><br>
+      Some features may not work as expected. Please enable JavaScript in your browser settings.
+    </div>
+  </noscript>
+
   <div class="container">
     <h1>Timer</h1>
 
-    <p>Minimal javascript library to create and manage timers in the browser</p>
+    <p>A lightweight, drift-free timer library built for the browser — precise, pause-resumable, and easy to use.</p>
+
+    <p><a href="https://github.com/georapbox/Timer" target="_blank" rel="noreferrer noopener">Source code & documentation</a></p>
 
     <h2>Demo</h2>
 
-    <form id="form">
+    <div class="info-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--accent)" viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M6 9a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 6 9M3.854 4.146a.5.5 0 1 0-.708.708L4.793 6.5 3.146 8.146a.5.5 0 1 0 .708.708l2-2a.5.5 0 0 0 0-.708l-2-2z"></path>
+        <path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"></path>
+      </svg>
+      <small><em>Open the browser's console to watch emitted events.</em></small>
+    </div>
+
+    <form id="form" autocomplete="off">
       <div>
-        <label for="elapsedTime" class="form-label text-truncate">Elapsed time (ms):</label>
-        <input class="form-control" id="elapsedTime" name="elapsedTime" type="number" min="0" max="30000" step="100" value="0" required>
+        <label for="elapsed" class="form-label text-truncate">Elapsed time (ms):</label>
+        <input class="form-control" id="elapsed" name="elapsed" type="number" min="0" max="30000" step="100" value="0" required>
       </div>
 
       <div>
@@ -35,42 +51,98 @@
       <input class="btn" type="submit" value="New instance">
     </form>
 
-    <button id="start" type="button" class="btn action" title="Start timer">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
-      </svg>
-      <span class="visually-hidden">Start</span>
-    </button>
+    <div class="actions">
+      <button id="start" type="button" class="btn action" title="Start timer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+        </svg>
+      </button>
 
-    <button id="stop" type="button" class="btn action" title="Stop timer">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
-        <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
-      </svg>
-      <span class="visually-hidden">Stop</span>
-    </button>
+      <button id="stop" type="button" class="btn action" title="Stop timer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+        </svg>
+      </button>
 
-    <button id="reset" type="button" class="btn action" title="Reset timer">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-stop-fill" viewBox="0 0 16 16">
-        <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/>
-      </svg>
-      <span class="visually-hidden">Reset</span>
-    </button>
+      <button id="reset" type="button" class="btn action" title="Reset timer">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-stop-fill" viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z"/>
+        </svg>
+      </button>
+    </div>
 
-    <div id="result"></div>
+    <div class="result">
+      Elapsed (ms): <code id="elapsed-placeholder"></code>
+      <br>
+      Remaining (ms): <code id="remaining-placeholder"></code>
+      <br>
+      <progress></progress>
+    </div>
 
-    <h2>Source</h2>
+    <h3>Source Code</h3>
 
     <p>
-      Source code and documentation can be found in <a href="https://github.com/georapbox/Timer" target="_blank" rel="noreferrer noopener">Github repository</a>.
+      Sample code to create and control a Timer instance with a duration of 60,000 milliseconds (1 minute).
     </p>
+
+<pre><code class="hljs language-xml">&lt;div&gt;
+  &lt;button id="start" type="button"&gt;Start&lt;/button&gt;
+  &lt;button id="stop" type="button"&gt;Stop&lt;/button&gt;
+  &lt;button id="reset" type="button"&gt;Reset&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;div&gt;
+  Elapsed (ms): &lt;code id="elapsed"&gt;&lt;/code&gt;
+  &lt;br&gt;
+  Remaining (ms): &lt;code id="remaining"&gt;&lt;/code&gt;
+  &lt;br&gt;
+  &lt;progress id="progress"&gt;&lt;/progress&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+  const startBtn = document.getElementById('start');
+  const stopBtn = document.getElementById('stop');
+  const resetBtn = document.getElementById('reset');
+  const elapsedEl = document.getElementById('elapsed');
+  const remainingEl = document.getElementById('remaining');
+  const progressEl = document.getElementById('progress');
+
+  function render(timer) {
+    const { remaining, elapsed } = timer.time();
+    elapsedEl.textContent = elapsed.toFixed(2);
+    remainingEl.textContent = remaining.toFixed(2);
+    progressEl.max = elapsed + remaining;
+    progressEl.value = elapsed;
+  }
+
+  function onTimerTick(evt) {
+    render(evt.currentTarget);
+  }
+
+  const timer = new Timer({
+    duration: 60_000,
+    elapsed: 0
+  }).on('tick', onTimerTick);
+
+  startBtn.addEventListener('click', () => {
+    timer.start()
+  });
+
+  stopBtn.addEventListener('click', () => {
+    timer.stop()
+  });
+
+  resetBtn.addEventListener('click', () => {
+    timer.reset();
+    render(timer);
+  });
+
+  render(timer);
+&lt;/script&gt;</code></pre>
 
     <h2>License</h2>
 
-    <p>
-      <a href="https://georapbox.mit-license.org/@2018" target="_blank" rel="noreferrer noopener">The MIT License (MIT)</a>
-    </p>
+    <p>Licensed under the <a href="https://github.com/georapbox/Timer/blob/master/LICENSE" target="_blank" rel="noreferrer noopener">The MIT License (MIT)</a></p>
   </div>
-
-  <script type="module" src="main.js"></script>
 </body>
 </html>

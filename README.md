@@ -1,109 +1,195 @@
 [![npm version](https://img.shields.io/npm/v/@georapbox/timer.svg)](https://www.npmjs.com/package/@georapbox/timer)
-[![Build Status](https://travis-ci.com/georapbox/Timer.svg?branch=master)](https://travis-ci.com/georapbox/Timer)
-[![Coverage Status](https://coveralls.io/repos/github/georapbox/Timer/badge.svg?branch=master)](https://coveralls.io/github/georapbox/Timer?branch=master)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://georapbox.mit-license.org/@2018)
+[![npm license](https://img.shields.io/npm/l/@georapbox/timer.svg)](https://www.npmjs.com/package/@georapbox/timer)
+
+[demo]: https://georapbox.github.io/Timer
+[license]: https://github.com/georapbox/Timer/blob/master/LICENSE
+[changelog]: https://github.com/georapbox/Timer/blob/master/CHANGELOG.md
 
 # Timer
 
-Minimal javascript library to create and manage timers
+A lightweight, drift-free timer library built for the browser — precise, pause-resumable, and easy to use.
 
-**NOTE:** Depends on `window.requestAnimationFrame`. If your environment does not support it, you can [polyfill](https://github.com/darius/requestAnimationFrame).
-
-[API documentation](#api) &bull; [Demo](https://georapbox.github.io/Timer/)
+[API documentation](#api) &bull; [Demo][demo]
 
 ## Installation
 
 ```sh
-$ npm install @georapbox/timer --save
+npm install --save @georapbox/timer
 ```
 
-The library is exported in UMD, CommonJS, and ESM formats. You can import it the following ways:
-
-### Using ESM import statement
+The library is exported in ESM format. You can import it the following way:
 
 ```js
-import Timer from '@georapbox/timer';
-```
-
-### Using CommonJS require statement
-
-```js
-const Timer = require('@georapbox/timer');
-```
-
-### As old school browser global
-
-```html
-<script src="https://unpkg.com/@georapbox/timer/dist/Timer.umd.min.js"></script>
+import { Timer } from '@georapbox/timer';
 ```
 
 ## API
 
-<a name="Timer"></a>
+### Constructor
 
-* [Timer](#Timer)
-  * [new Timer(elapsedTime, duration, [callback])](#new_Timer_new)
-  * [.time()](#Timer+time) ⇒ <code>Object</code>
-  * [.start()](#Timer+start) ⇒ [<code>Timer</code>](#Timer)
-  * [.stop()](#Timer+stop) ⇒ [<code>Timer</code>](#Timer)
-  * [.reset()](#Timer+reset) ⇒ [<code>Timer</code>](#Timer)
-  * [.isRunning()](#Timer+isRunning) ⇒ <code>Boolean</code>
+```js
+new Timer({ elapsed, duration })
+```
 
-<a name="new_Timer_new"></a>
+**Options**
 
-### new Timer(elapsedTime, duration, [callback])
-
-Timer constructor: Creates a new Timer instance.
-
-**Throws**:
-
-- <code>TypeError</code> If `duration` is not a number or `NaN`.
-- <code>TypeError</code> If `elapsedTime` is not a number or `NaN`.
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `elapsed` | `number` | Initial elapsed time in milliseconds. Default: `0`. Must be ≥ `0`. |
+| `duration` | `number` | Total duration in milliseconds. Default: `Infinity`. Must be ≥ `0` or `Infinity`. |
 
 
-| Param | Type | Description |
-| --- | --- | --- |
-| elapsedTime | <code>Number</code> | The time that has elapsed in milliseconds. If a negative number provided, it will become `0`. If a number greater than `duration` is provided, it will become equal to `duration`. |
-| duration | <code>Number</code> | The timer's duration in milliseconds. If a negative number provided, it will become `0`. |
-| [callback] | <code>function</code> | Function to be executed while timer is running. The `Timer` instance is passed by as parameter. |
+**Throws**
 
-<a name="Timer+time"></a>
+- `TypeError` if either `elapsed` or `duration` is not a number.
 
-### timer.time() ⇒ <code>Object</code>
-Get the remaining and elapsed time.
+**Notes**
 
-**Kind**: instance method of [<code>Timer</code>](#Timer)  
-**Returns**: <code>Object</code> - An object literal that contains the remaining and the elapsed time in milliseconds.  
-<a name="Timer+start"></a>
+- The timer is paused after construction; call `.start()` to begin.
+- Internally drift-free: time is computed from absolute timestamps, not accumulated deltas.
 
-### timer.start() ⇒ [<code>Timer</code>](#Timer)
-Starts the timer. If the timer instance has been already started, the timer will just resume.
+### Instance Methods
 
-**Kind**: instance method of [<code>Timer</code>](#Timer)  
-**Returns**: [<code>Timer</code>](#Timer) - The Timer instance.  
+All methods (except getters) return the instance for chaining.
 
-<a name="Timer+stop"></a>
+#### `start()`
 
-### timer.stop() ⇒ [<code>Timer</code>](#Timer)
-Stops/Pauses the timer.
+Starts or resumes the timer. Has no effect if the timer is already running or has reached its full duration (`elapsed >= duration`).
 
-**Kind**: instance method of [<code>Timer</code>](#Timer)  
-**Returns**: [<code>Timer</code>](#Timer) - The Timer instance.  
-<a name="Timer+reset"></a>
+#### `stop()`
 
-### timer.reset() ⇒ [<code>Timer</code>](#Timer)
-Resets the timer to its initial state.
+Pauses the timer. The elapsed time is preserved for resuming later.
 
-**Kind**: instance method of [<code>Timer</code>](#Timer)  
-**Returns**: [<code>Timer</code>](#Timer) - The Timer instance.  
+#### `reset()`
 
-<a name="Timer+isRunning"></a>
+Stops and resets the timer to its initial elapsed time (the value passed at construction).
 
-### timer.isRunning() ⇒ <code>Boolean</code>
-Checks (at any time) if the timer is running or not.
+#### `time()`
 
-**Kind**: instance method of [<code>Timer</code>](#Timer)  
-**Returns**: <code>Boolean</code> - `true` if the timer is running; otherwise `false`.  
+Returns a snapshot of the timer's current time state:
+
+```js
+const { elapsed, remaining } = timer.time();
+```
+
+- `elapsed` — elapsed time in ms
+- `remaining` — remaining time in ms (`Infinity` if `duration` is `Infinity`)
+
+#### `on(type, listener, options)`, `off(type, listener, options)`
+
+Attach, detach, event listeners for timer events.  
+(See [Events](#events) below for details.)
+
+### Static Methods
+
+#### `Timer.now()`
+
+Returns a high-resolution, monotonic timestamp in milliseconds.
+Uses `performance.now()` when available, otherwise falls back to `Date.now()`.
+
+### Properties
+
+#### `elapsed`
+
+Returns the current elapsed time in milliseconds.
+
+#### `remaining`
+
+Returns the remaining time in milliseconds (`Infinity` if `duration` is `Infinity`).
+
+#### `running`
+
+Returns `true` if the timer is currently running; otherwise `false`.
+
+### Events
+
+The Timer instance emits standard `Event` objects using the DOM [`EventTarget`](https://developer.mozilla.org/docs/Web/API/EventTarget) API to signal state changes during its lifecycle. You can subscribe using `.on()` and unsubscribe using `.off()` methods.
+
+| Event Name | Fired When | Notes |
+| ---------- | ---------- | ----- |
+| `start` | The timer starts or resumes after being stopped. | Fired once per start. |
+| `tick` | On each animation frame while running. | Frequency depends on the browser's `requestAnimationFrame` (≈60fps). |
+| `stop` | The timer is paused manually. | Elapsed time is preserved for resuming. |
+| `reset` | The timer is reset to its initial elapsed time. | Stops the timer if running. |
+| `finish` | The timer reaches its total duration. | Fired once automatically at completion. |
+
+> [!NOTE]
+> Events are standard `Event` objects (not `CustomEvent`s) emitted through the DOM `EventTarget` interface. They don't bubble through the document — they're scoped to the `Timer` instance itself.  
+> To access timing data, call `.time()` or read `.elapsed` / `.remaining` from the event's `currentTarget`. 
+
+> [!IMPORTANT]
+> When removing listeners with `.off()`, you must pass the **same function reference** you used with `.on()`.  
+> Creating a new anonymous function won't remove the previous listener — this mirrors native `addEventListener` / `removeEventListener` behavior in the DOM.
+
+```js
+const timer = new Timer({ duration: 5000 });
+
+const onStart = () => console.log('Timer started');
+const onTick = evt => {
+  const { elapsed, remaining } = evt.currentTarget.time();
+  console.log(`Elapsed: ${elapsed}ms, Remaining: ${remaining}ms`);
+};
+const onFinish = () => console.log('Timer finished');
+
+timer
+  .on('start', onStart)
+  .on('tick', onTick)
+  .on('finish', onFinish)
+  .start();
+
+  // Later...
+  timer.
+    off('start', onStart)
+    .off('tick', onTick)
+    .off('finish', onFinish);
+```
+
+### Usage Examples
+
+#### Basic Countdown
+
+```js
+const timer = new Timer({ duration: 10_000 })
+  .on('tick', evt => {
+    const { remaining } = evt.currentTarget;
+    label.textContent = `${Math.ceil(remaining / 1000)}s`;
+  })
+  .on('finish', () => {
+    label.textContent = 'Done!';
+  });
+
+timer.start();
+```
+
+#### Pause and Resume
+
+```js
+timer.stop(); // Pause
+// ...later
+timer.start(); // Resume
+```
+
+#### Reset
+
+```js
+const t = new Timer({ elapsed: 2000, duration: 10_000 }); // start "2s in"
+t.start();
+// ...
+t.reset(); // back to 2000ms elapsed
+```
+
+#### Infinite timer
+
+```js
+const infiniteTimer = new Timer({ duration: Infinity })
+  .on('tick', () => console.log('Timer is running indefinitely'))
+  .start();
+```
+
+## Changelog
+
+For API updates and breaking changes, check the [CHANGELOG][changelog].
+
 ## License
 
-[The MIT License (MIT)](https://georapbox.mit-license.org/@2018)
+[The MIT License (MIT)][license]
