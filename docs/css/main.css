@@ -5,14 +5,16 @@
   --bg-alt-color: #fff;
   --text-color: #303942;
   --link-color: var(--accent);
-  --button-bg-color: var(--accent);
-  --button-text-color: #ffffff;
-  --border-color: #dbdbdb;
+  --button-bg-color: #efefef;
+  --button-bg-hover-color: #dfdfdf;
+  --button-text-color: var(--text-color);
+  --border-color: #cdcaca;
   --code-color: #d63384;
   --error-color: #dc2626;
   --progress-bg-color: var(--accent);
 
   color-scheme: light dark;
+  accent-color: var(--accent);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,9 +22,10 @@
     --accent: #8ab4f8;
     --bg-color: #202b38;
     --bg-alt-color: #161f27;
-    --text-color: #cccccc;
+    --text-color: #e0e0e0;
     --link-color: var(--accent);
-    --button-text-color: #202125;
+    --button-bg-color: #0c151c;
+    --button-bg-hover-color: #040a0f;
     --border-color: #526980;
     --code-color: #ff67b3;
     --error-color: #fe5c5c;
@@ -83,14 +86,23 @@ a {
 .btn {
   background-color: var(--button-bg-color);
   color: var(--button-text-color);
-  border: 0;
-  padding: 0.375rem 0.75rem;
+  padding: 0.5rem 1.5rem;
   border-radius: 0.25rem;
+  border: 1px solid var(--border-color);
   line-height: 1.5;
   font-size: 1rem;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
+  transition: background-color 0.1s linear;
+}
+
+.btn:hover {
+  background-color: var(--button-bg-hover-color);
+}
+
+.btn:focus-visible {
+  outline-color: var(--accent);
 }
 
 .text-truncate {
@@ -129,7 +141,7 @@ form div {
 .form-control {
   display: block;
   width: 100%;
-  padding: 0.315rem 0.75rem;
+  padding: 0.5rem 0.75rem;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -137,9 +149,13 @@ form div {
   color: var(--text-color);
   background-color: var(--bg-alt-color);
   border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
   appearance: none;
   -webkit-appearance: none;
-  border-radius: 0.25rem;
+}
+
+.form-control:focus-visible {
+  outline-color: var(--accent);
 }
 
 .result {
@@ -164,9 +180,13 @@ form div {
   align-items: center;
   justify-content: center;
   padding: 0;
-  width: 2rem;
-  height: 2rem;
+  width: 2.4rem;
+  height: 2.4rem;
   line-height: 1;
+}
+
+.action svg {
+  font-size: 1.125rem;
 }
 
 .info-box {

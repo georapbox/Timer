@@ -54,7 +54,7 @@ All methods (except getters) return the instance for chaining.
 
 #### `start()`
 
-Starts or resumes the timer. No effect if it's already running or finished.
+Starts or resumes the timer. Has no effect if the timer is already running or has reached its full duration (`elapsed >= duration`).
 
 #### `stop()`
 

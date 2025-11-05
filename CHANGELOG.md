@@ -1,23 +1,30 @@
 # CHANGELOG
 
-## v3.0.0 (2025-10-XX)
+## v3.0.0 (2025-11-05)
 
 ### Breaking changes
 
-- The constructor signature has changed from `new Timer(elapsedTime, duration, [callback])` to `new Timer(elapsedTime, duration)`.  
+- The constructor signature has changed from `new Timer(elapsed, duration, [callback])` to `new Timer({ elapsed, duration })`.
+  Both `elapsed` and `duration` must be provided as properties of a single options object.  
   The `callback` parameter has been removed.  
   Use the `tick` event to handle per-frame updates instead and the `finish` event to handle timer completion.  
   ```js
-  const timer = new Timer(0, 5000) // 5 seconds
-    .on('tick', (e) => {
-      const { elapsed, remaining } = e.detail;
+  const timer = new Timer({ duration: 5000 })
+    .on('tick', evt => {
+      const timer = evt.currentTarget;
+      const { elapsed, remaining } = timer.time();
       console.log(`Elapsed: ${elapsed}ms, Remaining: ${remaining}ms`);
     })
     .on('finish', () => {
       console.log('Timer finished!');
     });
   ```
-  
+- Replace `isRunning()` method with a read-only `running` property.  
+  ```js
+  if (timer.running) {
+    console.log('Timer is running');
+  }
+  ```
 - The library is now **ES Modules–only**.  
   It is no longer distributed in CommonJS or UMD formats. Ensure your environment (browser, bundler, or Node ≥ 12) supports ESM imports.
 - Removed default export.  
@@ -31,9 +38,9 @@
 - **Refactored `Timer` implementation** for improved accuracy and clarity:
   - Event-driven architecture — removed callback parameter in favor of using `tick` and `finish` events for all updates. Added other events like `start`, `stop`, and `reset`.
   - Replaced incremental, per-frame time accumulation with a **drift-free, deadline-based model** using absolute timestamps (`performance.now()`).
-  - Replaced internal `_started` flag with clearer `_running` naming.
   - Moved `now()` helper into a **static class method** (`Timer.now()`), making the class fully self-contained.
-  - Simplified RAF loop: `_tick()` now schedules itself directly and auto-stops when duration elapses.
+  - Properties and methods that were previously "private by convention" (prefixed with `_`) are now true private class fields and methods (prefixed with `#`).
+  - Simplified RAF loop: `#tick()` now schedules itself directly and auto-stops when duration elapses.
 
 ### Added
 
